@@ -1,0 +1,23 @@
+{
+  "name": "shortlist-digital/agreable-instant-articles-plugin",
+  "type": "wordpress-plugin",
+  "description": "Wordpress plugin for Shortlist Media.",
+  "license": "MIT",
+  "require": {
+    "getherbert/framework": "~0.9",
+    "nategood/httpful": "dev-master",
+    "behat/behat": "~2.5",
+    "phpunit/phpunit": "5.0.*",
+    "guzzlehttp/guzzle": "~6.0",
+    "jimmiw/php-time-ago": "^0.4.10"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "AgreableInstantArticlesPlugin\\": "app/"
+    }
+  }
+}
