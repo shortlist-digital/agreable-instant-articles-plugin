@@ -12,7 +12,11 @@ class PostController {
    * Show the article.
    */
   public function view($category_slug, $post_slug) {
+
     $post = $this->get_postby_category_slug_post_slug($category_slug, $post_slug);
+
+    $post = new TimberPost($post);
+
     if (!$post) {
       throw new Exception('Post not found');
     }
