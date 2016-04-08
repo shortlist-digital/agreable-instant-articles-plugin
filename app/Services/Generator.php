@@ -9,26 +9,30 @@ use \stdClass;
 
 class Generator {
   public static function create_object($post) {
-
-    // get_field('body_class', 'option')
-    // $post->post_title;
-    // $object->metadata->datePublished = gmdate('c', strtotime($post->post_date));
-    // $object->metadata->dateCreated = gmdate('c', strtotime($post->post_date));
-    // $object->metadata->dateModified = gmdate('c', strtotime($post->post_modified));
-    // $object->metadata->authors = [$post->author->display_name];
-    // $object->metadata->canonicalURL = get_permalink($post->id);
-
-    // if($post->get_field('article_basic_sell') == null ) {
-    //   $object->metadata->excerpt = $post->get_field('social_description');
-    // }else{
-    //   $object->metadata->excerpt = $post->get_field('article_basic_sell');
-    // }
-    // $object->metadata->thumbnailURL = self::get_representative_article_image_url($post);
-    $content_components = self::get_content_components($post);
+    $content_components = [];
+    $content_components = array_merge($content_components, self::get_header_components($post));
+    $content_components = array_merge($content_components, self::get_content_components($post));
 
     foreach($content_components as $content_component) {
       echo $content_component;
     }
+  }
+
+  protected static function get_header_components(TimberPost $post) {
+    $components = [];
+    $theme_base_directory = get_stylesheet_directory();
+    $header_directory = $theme_base_directory . '/views/partials';
+    $header_type = $post->header_type;
+    $component_type = 'Partials';
+    $header_type = str_replace('_', '-', $header_type);
+    $generator_class = $header_directory . '/' . $header_type . '/generators/instant-articles/generator.php';
+    if (file_exists($generator_class)) {
+      include_once $generator_class;
+      $class_name = self::get_class_name($header_type, $component_type);
+      $generator = new $class_name();
+      $components[] = $generator->get($post);
+    }
+    return $components;
   }
 
   protected static function get_content_components($post) {
