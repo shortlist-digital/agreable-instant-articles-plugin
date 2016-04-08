@@ -9,6 +9,7 @@ use \stdClass;
 
 class Generator {
   public static function create_object($post) {
+
     $content_components = [];
     $content_components = array_merge($content_components, self::get_header_components($post));
     $content_components = array_merge($content_components, self::get_content_components($post));
@@ -54,12 +55,12 @@ class Generator {
         $class_name = self::get_class_name($widget_name, $component_type);
 
         $generator = new $class_name();
-        $widgetComponents = $generator->get($widget);
-        if (!is_array($widgetComponents)) {
-          $widgetComponents = [$widgetComponents];
+        $widget_components = $generator->get($widget);
+        if (!is_array($widget_components)) {
+          $widget_components = [$widget_components];
         }
-        foreach($widgetComponents as $widgetComponent) {
-          $components[] = $widgetComponent;
+        foreach($widget_components as $widget_component) {
+          $components[] = $widget_component;
         }
       } // Else skip widget
     }
