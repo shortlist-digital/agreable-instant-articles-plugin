@@ -25,6 +25,7 @@ class Generator {
     // }
     // $object->metadata->thumbnailURL = self::get_representative_article_image_url($post);
     $content_components = self::get_content_components($post);
+    $content_components = array_merge($content_components, self::get_footer_components($post));
 
     foreach($content_components as $content_component) {
       echo $content_component;
@@ -58,6 +59,19 @@ class Generator {
           $components[] = $widgetComponent;
         }
       } // Else skip widget
+    }
+    return $components;
+  }
+
+  protected static function get_footer_components(TimberPost $post) {
+    $components = [];
+    $theme_base_directory = get_stylesheet_directory();
+    $generator_class = $theme_base_directory . '/views/widgets/footer/generators/instant-articles/generator.php';
+    if (file_exists($generator_class)) {
+      include_once $generator_class;
+      $class_name = self::get_class_name('footer', 'Widgets');
+      $generator = new $class_name();
+      $components[] = $generator->get($post);
     }
     return $components;
   }
