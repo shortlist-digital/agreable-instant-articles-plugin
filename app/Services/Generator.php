@@ -13,7 +13,6 @@ class Generator {
     $content_components = array_merge($content_components, self::get_header_components($post));
     $content_components = array_merge($content_components, self::get_content_components($post));
     $content_components = array_merge($content_components, self::get_footer_components($post));
-    $content_components = [];
     foreach($content_components as $content_component) {
       echo $content_component;
     }
