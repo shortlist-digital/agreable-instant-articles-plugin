@@ -66,10 +66,10 @@ class Generator {
   protected static function get_footer_components(TimberPost $post) {
     $components = [];
     $theme_base_directory = get_stylesheet_directory();
-    $generator_class = $theme_base_directory . '/views/widgets/footer/generators/instant-articles/generator.php';
+    $generator_class = $theme_base_directory . '/views/partials/footer/generators/instant-articles/generator.php';
     if (file_exists($generator_class)) {
       include_once $generator_class;
-      $class_name = self::get_class_name('footer', 'Widgets');
+      $class_name = self::get_class_name('footer', 'Partials');
       $generator = new $class_name();
       $components[] = $generator->get($post);
     }
