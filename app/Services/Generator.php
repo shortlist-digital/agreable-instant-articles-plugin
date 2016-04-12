@@ -9,11 +9,11 @@ use \stdClass;
 
 class Generator {
   public static function create_object($post) {
-
     $content_components = [];
     $content_components = array_merge($content_components, self::get_header_components($post));
     $content_components = array_merge($content_components, self::get_content_components($post));
-
+    $content_components = array_merge($content_components, self::get_footer_components($post));
+    $content_components = [];
     foreach($content_components as $content_component) {
       echo $content_component;
     }
@@ -63,6 +63,19 @@ class Generator {
           $components[] = $widget_component;
         }
       } // Else skip widget
+    }
+    return $components;
+  }
+
+  protected static function get_footer_components(TimberPost $post) {
+    $components = [];
+    $theme_base_directory = get_stylesheet_directory();
+    $generator_class = $theme_base_directory . '/views/partials/footer/generators/instant-articles/generator.php';
+    if (file_exists($generator_class)) {
+      include_once $generator_class;
+      $class_name = self::get_class_name('footer', 'Partials');
+      $generator = new $class_name();
+      $components[] = $generator->get($post);
     }
     return $components;
   }
