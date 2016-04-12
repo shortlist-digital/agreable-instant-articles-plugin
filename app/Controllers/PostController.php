@@ -22,7 +22,6 @@ class PostController {
     }
 
     $object = Generator::create_object($post);
-    header('Content-Type: application/json');
     echo json_encode($object);
   }
 
