@@ -70,7 +70,7 @@ return [
      * The panels to auto-load.
      */
     'panels' => [
-        // 'AgreableInstantArticlesPlugin' => __DIR__ . '/app/panels.php'
+        'AgreableInstantArticlesPlugin' => __DIR__ . '/app/panels.php'
     ],
 
     /**
