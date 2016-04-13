@@ -6,7 +6,6 @@ use \TimberPost;
 use \Exception;
 use \stdClass;
 
-
 class Generator {
   public static function create_object($post) {
     $content_components = [];
