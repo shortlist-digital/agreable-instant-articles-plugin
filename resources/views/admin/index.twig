@@ -1,10 +1,5 @@
 <div class="wrap" id="instant-articles-configuration">
   <h1>Instant Articles Configuration</h1>
-  {% set fields = [
-    {'name': 'instant_articles_app_id', 'label': 'Instant Articles App ID', 'description': 'The Facebook App ID for your Instant Articles'},
-    {'name': 'instant_articles_app_secret', 'label': 'Instant Articles App Secret', 'description': 'The Facebook App secret for your Instant Articles'},
-    {'name': 'instant_articles_page_id', 'label': 'Instant Articles Page ID', 'description': 'The Facebook Page ID to post to Instant Articles'}
-  ] %}
 
   <form method="post" novalidate="novalidate" action="/instant-articles/save-config">
     <table class="form-table">

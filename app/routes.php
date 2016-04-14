@@ -8,10 +8,10 @@ $router->get([
   'uses' => __NAMESPACE__ . '\Controllers\TestController@index'
 ]);
 
-$router->get([
+$router->post([
   'as'   => 'save-config',
   'uri'  => '/instant-articles/save-config',
-  'uses' => __NAMESPACE__ . '\Controllers\ConfigController@index'
+  'uses' => __NAMESPACE__ . '\Controllers\PanelController@saveConfig'
 ]);
 
 $router->get([
