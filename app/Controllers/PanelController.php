@@ -2,7 +2,9 @@
 namespace AgreableInstantArticlesPlugin\Controllers;
 
 use Herbert\Framework\Http;
-use Facebook\InstantArticles\Client;
+use Facebook\InstantArticles\Client\Client;
+use Facebook\InstantArticles\Client\Helper;
+use Facebook\Authentication\AccessToken;
 
 class PanelController {
 
@@ -17,23 +19,26 @@ class PanelController {
       $field['value'] = get_option($field['name']);
     }
     return view('@AgreableInstantArticlesPlugin/admin/index.twig', [
-      'fields' => $this->fields
+      'fields' => $this->fields,
+      'pages' => $this->pages()
     ]);
   }
 
-  public function test() {
-    $client = Client::create(
-      get_option('instant_articles_app_id'),
-      get_option('instant_articles_app_secret'),
-      $userAccessToken,
-      get_option('instant_articles_app_secret'),
-      true // development envirorment?
-    );
-    echo "<pre>";print_r($client);die;
+  public function pages() {
 
+    $userAccessToken = new AccessToken("CAACzof7cFC0BAPKtFaJ5k5DdZCuwcqpKzNgZBIidaciBlzYsCswzksMXNP9OlthMZBotFU7vPZBYNZB8STIZAooE9TIcDqkZALOSK2DdvLszcpsANXZCvFrDce2kgaZA7smvsxhiiuJEec5rwjx0PVZCLqAgChGTgBZCiLkyU5QXVC1Ty3cTOt6ZA77tn9MQeSaidEcZD");
+
+    $helper = Helper::create(
+      get_option('instant_articles_app_id'),
+      get_option('instant_articles_app_secret')
+    );
+
+    // Grab pages you are admin of and tokens
+    return $helper->getPagesAndTokens($userAccessToken)->all();
   }
 
   public function saveConfig(Http $http) {
+    echo "<pre>";print_r($http->all());die;
     foreach($this->fields as $field) {
       update_option($field['name'], $http->get($field['name']));
     }
