@@ -12,15 +12,20 @@ class PanelController {
   ];
 
   public function index() {
+    foreach($this->fields as &$field) {
+      $field['value'] = get_option($field['name']);
+    }
     return view('@AgreableInstantArticlesPlugin/admin/index.twig', [
       'fields' => $this->fields
     ]);
   }
 
   public function saveConfig(Http $http) {
-    $http->get('submit');
-    $input = $http->all();
-    print_r($input);die;
+    foreach($this->fields as $field) {
+      update_option($field['name'], $http->get($field['name']));
+    }
+    $redirect = $_SERVER['HTTP_REFERER'];
+    header("location: $redirect");
   }
 
 }
