@@ -9,6 +9,12 @@ $router->get([
 ]);
 
 $router->get([
+  'as'   => 'save-config',
+  'uri'  => '/instant-articles/save-config',
+  'uses' => __NAMESPACE__ . '\Controllers\ConfigController@index'
+]);
+
+$router->get([
   'as'   => 'postView',
   'uri'  => '/{category_slug}/{post_slug}/instant-articles',
   'uses' => __NAMESPACE__ . '\Controllers\PostController@view'
