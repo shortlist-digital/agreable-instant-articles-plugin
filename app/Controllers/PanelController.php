@@ -7,7 +7,7 @@ class PanelController {
 
   public $fields = [
     ['name'=> 'instant_articles_app_id', 'label'=> 'Instant Articles App ID', 'description'=> 'The Facebook App ID for your Instant Articles'],
-    ['name'=> 'instant_articles_app_secret', 'label'=> 'Instant Articles App Secret', 'description'=> 'The Facebook App secret for your Instant Articles'],
+    ['name'=> 'instant_articles_app_secret', 'label'=> 'Instant Articles App Secret', 'description'=> 'The Facebook App secret for your Instant Articles', 'type' => 'password'],
     ['name'=> 'instant_articles_page_id', 'label'=> 'Instant Articles Page ID', 'description'=> 'The Facebook Page ID to post to Instant Articles']
   ];
 
@@ -26,6 +26,12 @@ class PanelController {
     }
     $redirect = $_SERVER['HTTP_REFERER'];
     header("location: $redirect");
+  }
+
+  public function clearConfig() {
+    foreach($this->fields as $field) {
+      delete_option($field['name']);
+    }
   }
 
 }

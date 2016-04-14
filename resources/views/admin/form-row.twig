@@ -3,7 +3,7 @@
     <label for="{{field.name}}" type="text">{{field.label}}</label>
   </th>
   <td>
-    <input name="{{field.name}}" type-"text" class="regular-text" value="{{field.value}}"/>
+    <input name="{{field.name}}" type="{{field.type|default('text')}}" class="regular-text" value="{{field.value}}"/>
     <p class="description">{{field.description}}</p>
   </td>
 </tr>
