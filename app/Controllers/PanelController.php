@@ -2,6 +2,7 @@
 namespace AgreableInstantArticlesPlugin\Controllers;
 
 use Herbert\Framework\Http;
+use Facebook\InstantArticles\Client;
 
 class PanelController {
 
@@ -20,6 +21,18 @@ class PanelController {
     ]);
   }
 
+  public function test() {
+    $client = Client::create(
+      get_option('instant_articles_app_id'),
+      get_option('instant_articles_app_secret'),
+      $userAccessToken,
+      get_option('instant_articles_app_secret'),
+      true // development envirorment?
+    );
+    echo "<pre>";print_r($client);die;
+
+  }
+
   public function saveConfig(Http $http) {
     foreach($this->fields as $field) {
       update_option($field['name'], $http->get($field['name']));
@@ -29,8 +42,10 @@ class PanelController {
   }
 
   public function clearConfig() {
+    echo "Deleted:</br>";
     foreach($this->fields as $field) {
       delete_option($field['name']);
+      echo $field['name']."</br>";
     }
   }
 
