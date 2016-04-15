@@ -9,6 +9,7 @@ use Facebook\Authentication\AccessToken;
 class PanelController {
 
   public $fields = [
+    ['name'=> 'instant_articles_app_user_access_token', 'label'=> 'Instant Articles User Access Token', 'description'=> 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken target="_blank"/">Generate one here</a>. Click "debug", and extend the token', 'type' => 'password'],
     ['name'=> 'instant_articles_app_id', 'label'=> 'Instant Articles App ID', 'description'=> 'The Facebook App ID for your Instant Articles'],
     ['name'=> 'instant_articles_app_secret', 'label'=> 'Instant Articles App Secret', 'description'=> 'The Facebook App secret for your Instant Articles', 'type' => 'password'],
     ['name'=> 'instant_articles_page_id', 'label'=> 'Instant Articles Page ID', 'description'=> 'The Facebook Page ID to post to Instant Articles', 'disabled' => true]

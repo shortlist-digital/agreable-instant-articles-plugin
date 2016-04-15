@@ -4,7 +4,7 @@
   </th>
   <td>
     <input name="{{field.name}}" type="{{field.type|default('text')}}" class="regular-text" value="{{field.value}}" {{ (field.disabled) ? 'disabled' : ''}}/>
-    <p class="description">{{field.description}}</p>
+    <p class="description">{{field.description|raw}}</p>
   </td>
 </tr>
 
