@@ -1,13 +1,15 @@
 <div class="wrap" id="instant-articles-configuration">
   <h1>Instant Articles Configuration</h1>
 
-  <form method="post" novalidate="novalidate" action="/instant-articles/save-config">
+  <form method="post" action="/instant-articles/save-config">
     <table class="form-table">
       <tbody>
         {% for field in fields %}
           {% include('@AgreableInstantArticlesPlugin/admin/form-row.twig')  with {'field': field} %}
         {% endfor %}
-        {% include('@AgreableInstantArticlesPlugin/admin/select-row.twig')  with {'pages': pages, 'selected': selected } %}
+        {% if pages %}
+          {% include('@AgreableInstantArticlesPlugin/admin/select-row.twig')  with {'pages': pages, 'selected': selected } %}
+        {% endif %}
       </tbody>
     </table>
     <p class="submit">

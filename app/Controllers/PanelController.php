@@ -9,7 +9,7 @@ use Facebook\Authentication\AccessToken;
 class PanelController {
 
   public $fields = [
-    ['name'=> 'instant_articles_app_user_access_token', 'label'=> 'Instant Articles User Access Token', 'description'=> 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken target="_blank"/">Generate one here</a>. Click "debug", and extend the token', 'type' => 'password'],
+    ['name'=> 'instant_articles_app_user_access_token', 'label'=> 'Instant Articles User Access Token', 'description'=> 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken" target="_blank"/">Generate one here</a>. Click "debug", and extend the token', 'type' => 'password'],
     ['name'=> 'instant_articles_app_id', 'label'=> 'Instant Articles App ID', 'description'=> 'The Facebook App ID for your Instant Articles'],
     ['name'=> 'instant_articles_app_secret', 'label'=> 'Instant Articles App Secret', 'description'=> 'The Facebook App secret for your Instant Articles', 'type' => 'password'],
     ['name'=> 'instant_articles_page_id', 'label'=> 'Instant Articles Page ID', 'description'=> 'The Facebook Page ID to post to Instant Articles', 'disabled' => true]
@@ -28,22 +28,28 @@ class PanelController {
 
   public function pages() {
 
-    $userAccessToken = new AccessToken("CAACzof7cFC0BAPKtFaJ5k5DdZCuwcqpKzNgZBIidaciBlzYsCswzksMXNP9OlthMZBotFU7vPZBYNZB8STIZAooE9TIcDqkZALOSK2DdvLszcpsANXZCvFrDce2kgaZA7smvsxhiiuJEec5rwjx0PVZCLqAgChGTgBZCiLkyU5QXVC1Ty3cTOt6ZA77tn9MQeSaidEcZD");
+    if (get_option('instant_articles_app_user_access_token')) {
+      $userAccessToken = new AccessToken(get_option('instant_articles_app_user_access_token'));
 
-    $helper = Helper::create(
-      get_option('instant_articles_app_id'),
-      get_option('instant_articles_app_secret')
-    );
+      $helper = Helper::create(
+        get_option('instant_articles_app_id'),
+        get_option('instant_articles_app_secret')
+      );
 
-    // Grab pages you are admin of and tokens
-    return $helper->getPagesAndTokens($userAccessToken)->all();
+      // Grab pages you are admin of and tokens
+      return $helper->getPagesAndTokens($userAccessToken)->all();
+    } else {
+      return false;
+    }
   }
 
   public function saveConfig(Http $http) {
     foreach($this->fields as $field) {
       update_option($field['name'], $http->get($field['name']));
     }
-    $this->decode_facebook_page_data($http->get('instant_articles_page'));
+    if (get_option('instant_articles_app_id')) {
+      $this->decode_facebook_page_data($http->get('instant_articles_page'));
+    }
     $redirect = $_SERVER['HTTP_REFERER'];
     header("location: $redirect");
   }
@@ -61,6 +67,8 @@ class PanelController {
       delete_option($field['name']);
       echo $field['name']."</br>";
     }
+    echo delete_option('instant_articles_page_name');
+    echo delete_option('instant_articles_page_token');
   }
 
 }

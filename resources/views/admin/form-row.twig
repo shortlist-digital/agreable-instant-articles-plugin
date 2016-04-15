@@ -3,7 +3,7 @@
     <label for="{{field.name}}" type="text">{{field.label}}</label>
   </th>
   <td>
-    <input name="{{field.name}}" type="{{field.type|default('text')}}" class="regular-text" value="{{field.value}}" {{ (field.disabled) ? 'disabled' : ''}}/>
+    <input name="{{field.name}}" type="{{field.type|default('text')}}" class="regular-text" value="{{field.value}}" {{ (field.disabled) ? 'disabled' : ''}} required/>
     <p class="description">{{field.description|raw}}</p>
   </td>
 </tr>
