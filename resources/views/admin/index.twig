@@ -7,7 +7,7 @@
         {% for field in fields %}
           {% include('@AgreableInstantArticlesPlugin/admin/form-row.twig')  with {'field': field} %}
         {% endfor %}
-        {% include('@AgreableInstantArticlesPlugin/admin/select-row.twig')  with {'pages': pages } %}
+        {% include('@AgreableInstantArticlesPlugin/admin/select-row.twig')  with {'pages': pages, 'selected': selected } %}
       </tbody>
     </table>
     <p class="submit">
