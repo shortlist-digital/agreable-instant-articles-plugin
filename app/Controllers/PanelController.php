@@ -44,10 +44,14 @@ class PanelController {
   }
 
   public function saveConfig(Http $http) {
+    $do_next_fields = false;
+    if (get_option('instant_articles_app_id')) {
+      $do_next_fields = true;
+    }
     foreach($this->fields as $field) {
       update_option($field['name'], $http->get($field['name']));
     }
-    if (get_option('instant_articles_app_id')) {
+    if ($do_next_fields) {
       $this->decode_facebook_page_data($http->get('instant_articles_page'));
     }
     $redirect = $_SERVER['HTTP_REFERER'];
