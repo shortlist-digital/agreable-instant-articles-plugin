@@ -1,6 +1,6 @@
 <?php namespace AgreableInstantArticlesPlugin\Hooks;
 
-use AgreableInstantArticlesPlugin\Controllers\Save;
+use AgreableInstantArticlesPlugin\Controllers\SaveController as Save;
 
 use add_action;
 use TimberPost;
