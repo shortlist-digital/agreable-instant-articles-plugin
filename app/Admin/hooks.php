@@ -24,14 +24,11 @@ class Hooks {
     if (!empty($post->article_should_publish_to_instant_articles)) {
       $post = new TimberPost($post_id);
       $save = new Save($post);
-      echo "Should publish to Facebook IA";die;
     }
   }
 
   public function custom_delete($post_id) {
     $post = new TimberPost($post_id);
-    $save = new Save($post);
-    print_r("Delete");die;
   }
 }
 
