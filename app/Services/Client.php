@@ -142,6 +142,7 @@ class Client
         Type::enforce($canonicalURL, Type::STRING);
 
         $response = $this->facebook->get('?id=' . $canonicalURL . '&fields=instant_article');
+        print_r($response->getBody());die;
         $instantArticle = $response->getGraphNode()->getField('instant_article');
 
         if (!$instantArticle) {

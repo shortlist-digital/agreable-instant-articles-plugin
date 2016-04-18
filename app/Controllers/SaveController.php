@@ -3,6 +3,7 @@
 use TimberPost;
 
 use AgreableInstantArticlesPlugin\Services\Client;
+use AgreableInstantArticlesPlugin\Services\ClientProvider;
 use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Transformer\Transformer;
 
@@ -14,23 +15,12 @@ class SaveController {
     $permalink = get_permalink($this->post->id);
     $url = "$permalink/instant-articles?bypass";
     $instant_article = $this->build_article_object($url);
-    $client = $this->setup_client();
+    $client = (new ClientProvider())->get_client_instance();
     try {
       $client->importArticle($instant_article, $take_live);
     } catch (Exception $e) {
       echo 'Could not import the article: '.$e->getMessage();
     }
-  }
-
-  public function setup_client() {
-    $client = Client::create(
-      get_option('instant_articles_app_id'),
-      get_option('instant_articles_app_secret'),
-      get_option('instant_articles_page_token'),
-      get_option('instant_articles_page_id'),
-      true// development environment?
-    );
-    return $client;
   }
 
   public function build_article_object($url) {
