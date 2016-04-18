@@ -8,7 +8,6 @@ class ArticleWalker {
     $this->post = $post;
     $this->json = file_get_contents($post->guid."/instant-articles?bypass");
     $this->article_array = json_decode($this->json, true);
-
   }
 
   public function check_if_asset($value) {
