@@ -14,7 +14,8 @@ return [
     'requires' => [
         // __DIR__ . '/app/customPostTypes.php',
         // __DIR__ . '/app/Admin/post-columns.php',
-        // __DIR__ . '/app/Admin/hooks.php'
+        __DIR__ . '/app/custom-fields/metabox.php',
+        __DIR__ . '/app/Admin/hooks.php'
     ],
 
     /**
@@ -70,7 +71,7 @@ return [
      * The panels to auto-load.
      */
     'panels' => [
-        // 'AgreableInstantArticlesPlugin' => __DIR__ . '/app/panels.php'
+        'AgreableInstantArticlesPlugin' => __DIR__ . '/app/panels.php'
     ],
 
     /**

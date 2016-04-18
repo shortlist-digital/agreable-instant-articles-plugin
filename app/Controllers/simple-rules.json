@@ -1,0 +1,35 @@
+{
+  "rules":[
+    {
+      "class":"TextNodeRule"
+    },
+    {
+      "class":"PassThroughRule",
+      "selector":"html"
+    },
+    {
+      "class":"PassThroughRule",
+      "selector":"head"
+    },
+    {
+      "class":"PassThroughRule",
+      "selector":"script"
+    },
+    {
+      "class":"PassThroughRule",
+      "selector":"body"
+    },
+    {
+      "class":"ItalicRule",
+      "selector":"i"
+    },
+    {
+      "class":"BoldRule",
+      "selector":"b"
+    },
+    {
+      "class":"ParagraphRule",
+      "selector":"p"
+    }
+  ]
+}
