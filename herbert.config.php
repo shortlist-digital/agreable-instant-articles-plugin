@@ -14,7 +14,7 @@ return [
     'requires' => [
         // __DIR__ . '/app/customPostTypes.php',
         // __DIR__ . '/app/Admin/post-columns.php',
-        // __DIR__ . '/app/Admin/hooks.php'
+        __DIR__ . '/app/Admin/hooks.php'
     ],
 
     /**
