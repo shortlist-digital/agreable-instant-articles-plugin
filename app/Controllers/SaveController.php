@@ -2,7 +2,7 @@
 
 use TimberPost;
 
-use Facebook\InstantArticles\Client\Client;
+use AgreableInstantArticlesPlugin\Services\Client;
 use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Transformer\Transformer;
 
@@ -38,22 +38,9 @@ class SaveController {
       $html = file_get_contents($url, true);
     } catch (\Exception $e) {
       echo $e->getMessage();
+      die;
     }
-    $rules_file_content = file_get_contents("simple-rules.json", true);
-    $transformer = new Transformer();
-
-    //$transformer->loadRules($rules_file_content);
-    $instant_article = InstantArticle::create();
-    libxml_use_internal_errors(true);
-    $document = new \DOMDocument();
-    $document->loadHTML($html);
-    libxml_use_internal_errors(false);
-    ob_start();
-    $transformer->transform($instant_article, $document);
-    ob_end_clean();
-    $warnings = $transformer->getWarnings();
-    print_r($warnings);die;
-    return $instant_article;
+    return $html;
 
   }
 
