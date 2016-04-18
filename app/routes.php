@@ -8,6 +8,18 @@ $router->get([
   'uses' => __NAMESPACE__ . '\Controllers\PanelController@test'
 ]);
 
+$router->get([
+  'as'   => 'statusView',
+  'uri'  => '/instant-articles/status',
+  'uses' => __NAMESPACE__ . '\Controllers\StatusController@index'
+  ]);
+
+$router->post([
+  'as'   => 'saveConfig',
+  'uri'  => '/instant-articles/save-config',
+  'uses' => __NAMESPACE__ . '\Controllers\PanelController@saveConfig'
+]);
+
 $router->post([
   'as'   => 'saveConfig',
   'uri'  => '/instant-articles/save-config',
