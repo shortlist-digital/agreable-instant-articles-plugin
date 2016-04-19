@@ -21,9 +21,11 @@ class Hooks {
   public function create_or_update($post_id) {
     if (wp_is_post_revision( $post_id )) return;
     $post = new TimberPost($post_id);
-    if (!empty($post->article_should_publish_to_instant_articles)) {
-      $post = new TimberPost($post_id);
-      $save = new Save($post);
+    if ($post->post_status != 'trash') {
+      if (!empty($post->article_should_publish_to_instant_articles)) {
+        $post = new TimberPost($post_id);
+        $save = new Save($post);
+      }
     }
   }
 
