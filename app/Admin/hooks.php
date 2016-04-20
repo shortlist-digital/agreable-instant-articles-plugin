@@ -15,10 +15,12 @@ class Hooks {
   }
 
   function defer_to_cron($post_id) {
-    wp_schedule_single_event(time(), 'apple_news_create_or_update', array($post_id));
+    wp_schedule_single_event(time(), 'create_or_update', array($post_id));
   }
 
   public function create_or_update($post_id) {
+    $check_status = !empty($post->article_should_publish_to_instant_articles);
+    print_r($check_status);die;
     if (wp_is_post_revision( $post_id )) return;
     $post = new TimberPost($post_id);
     if ($post->post_status != 'trash') {
@@ -26,6 +28,12 @@ class Hooks {
         $post = new TimberPost($post_id);
         $save = new Save($post);
       }
+      if (!empty($post->article_should_publish_to_instant_articles != true)) {
+        $this->custom_delete($post_id);
+      }
+    }
+    if ($post->post_status == 'trash') {
+      $this->custom_delete($post_id);
     }
   }
 
