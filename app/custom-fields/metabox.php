@@ -16,6 +16,7 @@ if( function_exists('acf_add_local_field_group') ):
           'width' => '49%',
         ),
         'type' => 'true_false',
+        'default_value' => false
       ),
       array (
         'key' => 'instant_articles_is_preview',
