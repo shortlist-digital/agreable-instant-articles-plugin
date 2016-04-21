@@ -54,7 +54,7 @@ class Generator {
         $class_name = self::get_class_name($widget_name, $component_type);
 
         $generator = new $class_name();
-        $widget_components = $generator->get($widget);
+        $widget_components = $generator->get($widget, $post);
         if (!is_array($widget_components)) {
           $widget_components = [$widget_components];
         }
