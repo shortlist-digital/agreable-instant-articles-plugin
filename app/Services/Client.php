@@ -13,6 +13,7 @@ use Facebook\Facebook;
 use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\Authentication\AccessToken;
 use Facebook\InstantArticles\Validators\Type;
+use Facebook\InstantArticles\Client\InstantArticleStatus;
 
 class Client
 {
@@ -141,10 +142,11 @@ class Client
     {
         Type::enforce($canonicalURL, Type::STRING);
 
-        $response = $this->facebook->get('?id=' . $canonicalURL . '&fields=instant_article');
-        print_r($response->getBody());die;
+        $response = $this->facebook->get('?id=' . $canonicalURL . '&fields=instant_article,development_instant_article');
         $instantArticle = $response->getGraphNode()->getField('instant_article');
-
+        if (!$instantArticle) {
+          $instantArticle = $response->getGraphNode()->getField('development_instant_article');
+        }
         if (!$instantArticle) {
             return null;
         }

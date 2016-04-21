@@ -24,18 +24,15 @@ class UsefulHooks {
   }
 
   public function create($post_id) {
-    do_action('useful-hook-create', $post_id);
-    echo "Create";die;
+    do_action('useful-hooks-create', $post_id);
   }
 
   public function update($post_id) {
-    do_action('useful-hook-update', $post_id);
-    echo "Update";die;
+    do_action('useful-hooks-update', $post_id);
   }
 
   public function delete($post_id) {
-    do_action('useful-hook-delete', $post_id);
-    echo "Delete";die;
+    do_action('useful-hooks-delete', $post_id);
   }
 
 }
