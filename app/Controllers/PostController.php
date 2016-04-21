@@ -15,14 +15,15 @@ class PostController {
 
     $post = $this->get_postby_category_slug_post_slug($category_slug, $post_slug);
 
-    $post = new TimberPost($post);
+    // Commenting this out as it seems to break the HTML loading
+    // $post = new TimberPost($post);
 
     if (!$post) {
       throw new Exception('Post not found');
     }
 
     $object = Generator::create_object($post);
-    echo json_encode($object);
+    echo $object;
   }
 
 

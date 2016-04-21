@@ -1,53 +1,37 @@
 <?php namespace AgreableInstantArticlesPlugin\Hooks;
 
-use AgreableInstantArticlesPlugin\Helper;
-use AgreableInstantArticlesPlugin\SaveController;
-use AgreableInstantArticlesPlugin\UpdateController;
-use AgreableInstantArticlesPlugin\DeleteController;
-use AgreableInstantArticlesPlugin\Services\Compiler;
-use \add_action;
-use \TimberPost;
+use AgreableInstantArticlesPlugin\Controllers\SaveController as Save;
+use AgreableInstantArticlesPlugin\Controllers\DeleteController as Delete;
 
-class AgreableInstantArticlesHookLoader {
+use add_action;
+use TimberPost;
 
-  public function font_mime_types($mime_types) {
-    $mime_types['otf'] = 'font/opentype';
-    $mime_types['ttf'] = 'application/octet-stream';
-    $mime_types['woff'] = 'application/x-font-woff';
-    return $mime_types;
-  }
+class Hooks {
 
-  public function init() {
-    add_action('delete_post', array($this, 'custom_delete'), 10, 1);
-    add_action('apple_news_create_or_update', array($this, 'create_or_update'), 10, 1);
-    add_action('save_post', array($this, 'defer_to_cron'), 13, 1);
-    add_filter('upload_mimes', array($this, 'font_mime_types'), 1, 1);
-  }
-
-  function defer_to_cron($post_id) {
-    wp_schedule_single_event(time(), 'apple_news_create_or_update', array($post_id));
+  function __construct() {
+    //add_action('useful-hooks-create', array($this, 'create_or_update'), 13, 1);
+    add_action('useful-hooks-update', array($this, 'create_or_update'), 13, 1);
+    add_action('useful-hooks-delete', array($this, 'custom_delete'), 13, 1);
   }
 
   public function create_or_update($post_id) {
     if (wp_is_post_revision( $post_id )) return;
     $post = new TimberPost($post_id);
-    if (!in_array($post->post_type, array('post', 'feature', 'partnership'))) {return;}
-    if ($post->status === 'publish') {
-      $compiler = new Compiler($post);
-      $compiler->run();
+    if (isset($post->article_should_publish_to_instant_articles) && ($post->article_should_publish_instant_articles == true)) {
+      $post = new TimberPost($post_id);
+      $save = new Save($post);
+    }
+    if (isset($post->article_should_publish_to_instant_articles) && ($post->article_should_publish_instant_articles == false)) {
+      $this->custom_delete($post_id);
     }
   }
 
   public function custom_delete($post_id) {
-    if (wp_is_post_revision( $post_id )) return;
     $post = new TimberPost($post_id);
-    if (!in_array($post->post_type, array('post', 'feature', 'partnership'))) {return;}
-    $post = new TimberPost($post_id);
-    $compiler = new Compiler($post);
-    $compiler->delete_post($post);
+    new Delete($post);
   }
 }
 
-(new AgreableInstantArticlesHookLoader())->init();
+new Hooks();
 
 ?>
