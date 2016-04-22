@@ -20,8 +20,7 @@ class Hooks {
     if (property_exists($post, 'article_should_publish_to_instant_articles') && ($post->article_should_publish_to_instant_articles == 1)) {
       $post = new TimberPost($post_id);
       $save = new Save($post);
-    }
-    if (property_exists($post, 'article_should_publish_to_instant_articles') && ($post->article_should_publish_instant_articles == 0)) {
+    } else if (property_exists($post, 'article_should_publish_to_instant_articles')) {
       $this->custom_delete($post_id);
     }
   }
