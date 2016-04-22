@@ -10,6 +10,7 @@ use Facebook\InstantArticles\Transformer\Transformer;
 class SaveController {
 
   function __construct(TimberPost $post) {
+    if (!property_exists($post, 'catfish_importer_url')) return;
     $this->post = $post;
     $take_live = !empty($post->instant_articles_is_preview);
     $permalink = get_permalink($this->post->id);
