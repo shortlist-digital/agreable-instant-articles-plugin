@@ -98,6 +98,7 @@ class Client
             'take_live' => $takeLive,
             'development_mode' => $this->developmentMode,
             ]);
+          return json_decode($response->getBody());
         } catch(Facebook\Exceptions\FacebookResponseException $e) {
           echo 'Graph returned an error: ' . $e->getMessage();
           exit;
@@ -132,6 +133,7 @@ class Client
         return false;
     }
 
+
     /**
      * Get an Instant Article ID on its canonical URL.
      *
@@ -153,6 +155,14 @@ class Client
 
         $articleID = $instantArticle->getField('id');
         return $articleID;
+    }
+
+    public function getSubmissionStatus($submissionID) {
+      if (!$submissionID) {
+        return json_encode(array('error' => 'No Status ID available'));
+      }
+      $response = $this->facebook->get($submissionID);
+      return $response->getBody();
     }
 
 

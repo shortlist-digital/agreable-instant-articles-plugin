@@ -18,7 +18,10 @@ class SaveController {
     $instant_article = $this->build_article_object($url);
     $client = (new ClientProvider())->get_client_instance();
     try {
-      $client->importArticle($instant_article, $take_live);
+      $response = $client->importArticle($instant_article, $take_live);
+      if ($id = $response->id) {
+        update_field('instant_articles_status_id', $id, $post);
+      }
     } catch (Exception $e) {
       echo 'Could not import the article: '.$e->getMessage();
     }

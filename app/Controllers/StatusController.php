@@ -14,12 +14,7 @@ class StatusController {
     $post = get_page_by_path($post_slug, OBJECT,'post');
     $post = new TimberPost($post->ID);
     $canonical_url = $post->catfish_importer_url;
-    try {
-      $article_id = $this->client->getArticleIDFromCanonicalURL($canonical_url);
-    } catch(\Exception $e) {
-      print_r($e);die;
-    }
-    print_r($article_id);die;
+    return $this->client->getSubmissionStatus(get_field('instant_articles_status_id', $post));
   }
 
 }
