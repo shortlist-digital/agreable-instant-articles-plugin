@@ -21,9 +21,8 @@ class Generator {
     $components = [];
     $theme_base_directory = get_stylesheet_directory();
     $header_directory = $theme_base_directory . '/views/partials';
-    $header_type = $post->header_type;
+    $header_type = 'super-hero';
     $component_type = 'Partials';
-    $header_type = str_replace('_', '-', $header_type);
     $generator_class = $header_directory . '/' . $header_type . '/generators/instant-articles/generator.php';
     if (file_exists($generator_class)) {
       include_once $generator_class;
@@ -42,7 +41,9 @@ class Generator {
     $theme_base_directory = get_stylesheet_directory();
     $widgets_directory = $theme_base_directory . '/views/widgets';
 
-    foreach ($post->get_field('article_widgets') as $widget) {
+
+
+    foreach ($post->get_field('widgets') as $widget) {
       $widget_name = $widget['acf_fc_layout'];
       $component_type = 'Widgets';
       $generator_class = $widgets_directory . '/' . $widget_name . '/generators/instant-articles/generator.php';
