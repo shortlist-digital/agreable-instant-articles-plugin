@@ -4,6 +4,7 @@ namespace AgreableInstantArticlesPlugin\Controllers;
 use Herbert\Framework\Http;
 use Facebook\InstantArticles\Client\Client;
 use Facebook\InstantArticles\Client\Helper;
+use Facebook\InstantArticles\Validators\Type;
 use Facebook\Authentication\AccessToken;
 
 class PanelController {
@@ -31,13 +32,23 @@ class PanelController {
     if (get_option('instant_articles_app_user_access_token')) {
       $userAccessToken = new AccessToken(get_option('instant_articles_app_user_access_token'));
 
+      Type::enforce($userAccessToken, 'Facebook\Authentication\AccessToken');
+
       $helper = Helper::create(
         get_option('instant_articles_app_id'),
         get_option('instant_articles_app_secret')
       );
 
+      try {
+        $helper->getPagesAndTokens($userAccessToken)->all();
+      } catch(Facebook\Exceptions\FacebookResponseException $e) {
+        print_r($e);die;
+      }
+
       // Grab pages you are admin of and tokens
-      return $helper->getPagesAndTokens($userAccessToken)->all();
+      $pages_data = $helper->getPagesAndTokens($userAccessToken)->all();
+      //print_r($pages_data);die;
+      return $pages_data;
     } else {
       return false;
     }
