@@ -34,7 +34,7 @@ $router->get([
 
 $router->get([
   'as'   => 'postView',
-  'uri'  => '/{category_slug}/{sub_category_slug}/{post_slug}/instant-articles',
+  'uri'  => '/{category_slug}/{sub_category_slug}/{post_slug}/{post_id}/instant-articles',
   'uses' => __NAMESPACE__ . '\Controllers\PostController@view'
 ]);
 
