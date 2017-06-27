@@ -3,7 +3,6 @@
 use AgreableInstantArticlesPlugin\Controllers\SaveController as Save;
 use AgreableInstantArticlesPlugin\Controllers\DeleteController as Delete;
 
-use add_action;
 use TimberPost;
 
 class Hooks {
