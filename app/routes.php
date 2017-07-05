@@ -1,31 +1,8 @@
 <?php namespace AgreableInstantArticlesPlugin;
 
 /** @var \Herbert\Framework\Router $router */
-
-$router->get([
-  'as'   => 'testView',
-  'uri'  => '/instant-articles/test',
-  'uses' => __NAMESPACE__ . '\Controllers\PanelController@test'
-]);
-
-$router->post([
-  'as'   => 'saveConfig',
-  'uri'  => '/instant-articles/save-config',
-  'uses' => __NAMESPACE__ . '\Controllers\PanelController@saveConfig'
-]);
-
-$router->post([
-  'as'   => 'saveConfig',
-  'uri'  => '/instant-articles/save-config',
-  'uses' => __NAMESPACE__ . '\Controllers\PanelController@saveConfig'
-]);
-
-$router->get([
-  'as'   => 'clearConfig',
-  'uri'  => '/instant-articles/clear-config',
-  'uses' => __NAMESPACE__ . '\Controllers\PanelController@clearConfig'
-]);
-
+/**
+This does not work currently.
 $router->get([
   'as'   => 'postView',
   'uri'  => '/{category_slug}/{post_slug}/instant-articles',
@@ -49,3 +26,4 @@ $router->get([
   'uri'  => '/{category_slug}/{sub_category_slug}/{post_slug}/instant-articles/status',
   'uses' => __NAMESPACE__ . '\Controllers\StatusController@index'
 ]);
+**/
