@@ -4,12 +4,6 @@
   "description": "Wordpress plugin for Shortlist Media.",
   "license": "MIT",
   "require": {
-    "shortlist-digital/herbert-framework": "~1.0",
-    "nategood/httpful": "dev-master",
-    "behat/behat": "~2.5",
-    "phpunit/phpunit": "5.0.*",
-    "guzzlehttp/guzzle": "~6.0",
-    "jimmiw/php-time-ago": "^0.4.10",
     "facebook/facebook-instant-articles-sdk-php": "1.*"
   },
   "config": {
