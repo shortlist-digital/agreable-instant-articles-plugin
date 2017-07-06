@@ -12,17 +12,7 @@ class UsefulHooks {
 
 
 	public function __construct() {
-		// Trash
-		//add_action('wp_trash_post', array($this, 'delete'));
-		// Equivalent to a create
-		//add_action('wp_untrash_post', array($this, 'create'));
-		// Create
-		//add_action('draft_to_publish', array($this, 'create'));
-		//add_action('pending_to_publish', array($this, 'create'));
-		//add_action('auto-draft_to_publish', array($this, 'create'));
-		// Update
-		//add_action('publish_to_publish', array($this, 'update'));
-		// Equivalent to delete
+
 		add_action( 'save_post', array( $this, 'save_post_intent' ) );
 		add_action( 'transition_post_status', array( $this, 'transition_intent' ), 10, 3 );
 	}
