@@ -32,6 +32,15 @@ class Generator {
 		return $components;
 	}
 
+	protected static function get_class_name( $widget_name, $component_type ) {
+		$widget_class_name = '';
+		foreach ( explode( '-', $widget_name ) as $widget_name_fragment ) {
+			$widget_class_name .= ucfirst( $widget_name_fragment );
+		}
+
+		return 'Agreable\\' . $component_type . '\\' . $widget_class_name . '\Generators\InstantArticles\Generator';
+	}
+
 	protected static function get_content_components( TimberPost $post ) {
 		$components = [];
 
@@ -77,14 +86,5 @@ class Generator {
 		}
 
 		return $components;
-	}
-
-	protected static function get_class_name( $widget_name, $component_type ) {
-		$widget_class_name = '';
-		foreach ( explode( '-', $widget_name ) as $widget_name_fragment ) {
-			$widget_class_name .= ucfirst( $widget_name_fragment );
-		}
-
-		return 'Agreable\\' . $component_type . '\\' . $widget_class_name . '\Generators\InstantArticles\Generator';
 	}
 }

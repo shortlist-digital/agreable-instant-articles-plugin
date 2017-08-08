@@ -6,15 +6,14 @@ class UsefulHooks {
 
 	public static $disabled = false;
 
-	public static function disableOnSaveFunctionality() {
-		self::$disabled = true;
-	}
-
-
 	public function __construct() {
 
 		add_action( 'save_post', array( $this, 'save_post_intent' ) );
 		add_action( 'transition_post_status', array( $this, 'transition_intent' ), 10, 3 );
+	}
+
+	public static function disableOnSaveFunctionality() {
+		self::$disabled = true;
 	}
 
 	public function transition_intent( $new_status, $old_status, $post ) {
@@ -31,6 +30,10 @@ class UsefulHooks {
 				$this->create( $post->ID );
 				break;
 		}
+	}
+
+	public function create( $post_id ) {
+		do_action( 'useful-hooks-create', $post_id );
 	}
 
 	public function save_post_intent( $post_id ) {
@@ -58,16 +61,12 @@ class UsefulHooks {
 
 	}
 
-	public function create( $post_id ) {
-		do_action( 'useful-hooks-create', $post_id );
+	public function delete( $post_id ) {
+		do_action( 'useful-hooks-delete', $post_id );
 	}
 
 	public function update( $post_id ) {
 		do_action( 'useful-hooks-update', $post_id );
-	}
-
-	public function delete( $post_id ) {
-		do_action( 'useful-hooks-delete', $post_id );
 	}
 
 }

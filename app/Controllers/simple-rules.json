@@ -1,35 +1,35 @@
 {
-  "rules":[
+  "rules": [
     {
-      "class":"TextNodeRule"
+      "class": "TextNodeRule"
     },
     {
-      "class":"PassThroughRule",
-      "selector":"html"
+      "class": "PassThroughRule",
+      "selector": "html"
     },
     {
-      "class":"PassThroughRule",
-      "selector":"head"
+      "class": "PassThroughRule",
+      "selector": "head"
     },
     {
-      "class":"PassThroughRule",
-      "selector":"script"
+      "class": "PassThroughRule",
+      "selector": "script"
     },
     {
-      "class":"PassThroughRule",
-      "selector":"body"
+      "class": "PassThroughRule",
+      "selector": "body"
     },
     {
-      "class":"ItalicRule",
-      "selector":"i"
+      "class": "ItalicRule",
+      "selector": "i"
     },
     {
-      "class":"BoldRule",
-      "selector":"b"
+      "class": "BoldRule",
+      "selector": "b"
     },
     {
-      "class":"ParagraphRule",
-      "selector":"p"
+      "class": "ParagraphRule",
+      "selector": "p"
     }
   ]
 }
