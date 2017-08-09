@@ -4,7 +4,15 @@ namespace AgreableInstantArticlesPlugin\Services;
 
 use TimberPost;
 
+/**
+ * Class Generator
+ *
+ * @package AgreableInstantArticlesPlugin\Services
+ */
 class Generator {
+	/**
+	 * @param $post
+	 */
 	public static function create_object( $post ) {
 		$content_components = [];
 		$content_components = array_merge( $content_components, self::get_header_components( $post ) );
@@ -15,6 +23,11 @@ class Generator {
 		}
 	}
 
+	/**
+	 * @param TimberPost $post
+	 *
+	 * @return array
+	 */
 	protected static function get_header_components( TimberPost $post ) {
 		$components           = [];
 		$theme_base_directory = get_stylesheet_directory();
@@ -32,6 +45,12 @@ class Generator {
 		return $components;
 	}
 
+	/**
+	 * @param $widget_name
+	 * @param $component_type
+	 *
+	 * @return string
+	 */
 	protected static function get_class_name( $widget_name, $component_type ) {
 		$widget_class_name = '';
 		foreach ( explode( '-', $widget_name ) as $widget_name_fragment ) {
@@ -41,6 +60,11 @@ class Generator {
 		return 'Agreable\\' . $component_type . '\\' . $widget_class_name . '\Generators\InstantArticles\Generator';
 	}
 
+	/**
+	 * @param TimberPost $post
+	 *
+	 * @return array
+	 */
 	protected static function get_content_components( TimberPost $post ) {
 		$components = [];
 
@@ -74,6 +98,11 @@ class Generator {
 		return $components;
 	}
 
+	/**
+	 * @param TimberPost $post
+	 *
+	 * @return array
+	 */
 	protected static function get_footer_components( TimberPost $post ) {
 		$components           = [];
 		$theme_base_directory = get_stylesheet_directory();
