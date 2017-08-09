@@ -5,7 +5,13 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 
 
 class Wrap extends AbstractWidget {
+	public function __construct( $post_id ) {
+		parent::__construct( [], $post_id );
+	}
+
 	public function getData() {
+
+		$post  = new \TimberPost( $this->post_id );
 		$title = get_the_title( $this->post_id );
 
 		if ( strlen( $title ) < 250 ) {
@@ -14,21 +20,18 @@ class Wrap extends AbstractWidget {
 			$title = get_field( 'short_headline', $this->post_id );
 		}
 
-		$category       = $post->terms( 'category' );
-		$html_as_string = \Timber::compile(
-			'./template.twig',
-			array(
-				'site'               => new TimberSite(),
-				'post'               => $post,
-				'post_category'      => $post->post_category,
-				'post_category_slug' => $category[0]->slug,
-				'post_date'          => gmdate( 'd M Y', strtotime( $post->post_date ) ),
-				'adverts'            => $this->get_adverts( $post ),
-				'canonical_url'      => $post->get_field( 'catfish_importer_url' ),
-			)
-		);
+		$category = $post->terms( 'category' );
 
-		return $html_as_string;
+
+		return array(
+			'site'               => new TimberSite(),
+			'post'               => $post,
+			'post_category'      => $post->post_category,
+			'post_category_slug' => $category[0]->slug,
+			'post_date'          => gmdate( 'd M Y', strtotime( $post->post_date ) ),
+			'adverts'            => $this->get_adverts( $post ),
+			'canonical_url'      => $post->get_field( 'catfish_importer_url' ),
+		);
 	}
 
 	protected function get_adverts( $post ) {
@@ -66,5 +69,9 @@ class Wrap extends AbstractWidget {
 		}
 
 		return $adverts;
+	}
+
+	public function getTemplate() {
+		return 'base.twig';
 	}
 }

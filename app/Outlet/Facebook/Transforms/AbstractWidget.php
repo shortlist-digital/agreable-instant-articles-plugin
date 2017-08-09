@@ -35,12 +35,16 @@ class AbstractWidget {
 
 	}
 
-
 	/**
 	 * @return array
 	 */
 	public function getData() {
 		return $this->data;
+	}
+
+	public function getField( $name, $default = null ) {
+		return isset( $this->data[ $name ] ) ? $this->data[ $name ] : $default;
+
 	}
 
 	/**
@@ -71,7 +75,7 @@ class AbstractWidget {
 		$classSegments = explode( '\\', static::class );
 		$name          = array_pop( $classSegments );
 
-		return self::camel2dashed( $name );
+		return 'widgets/' . self::camel2dashed( $name );
 
 	}
 

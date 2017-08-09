@@ -4,7 +4,8 @@
   "description": "Wordpress plugin for Shortlist Media.",
   "license": "MIT",
   "require": {
-    "facebook/facebook-instant-articles-sdk-php": "1.*"
+    "facebook/facebook-instant-articles-sdk-php": "1.6.2",
+    "sunra/php-simple-html-dom-parser": "~1.5"
   },
   "config": {
     "preferred-install": "dist"

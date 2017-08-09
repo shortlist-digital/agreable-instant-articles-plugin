@@ -10,15 +10,16 @@
  * License:           MIT
  */
 if ( class_exists( '\Croissant\Helper\RequiredEnv' ) && ! \Croissant\Helper\RequiredEnv::variables( [
-		'instant_articles_app_user_access_token' => 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken" target="_blank"/">Generate one here</a>. (Click "debug", and extend the token)',
-		'instant_articles_app_id'                => 'The Facebook App ID for your Instant Articles',
-		'instant_articles_app_secret'            => 'The Facebook App secret for your Instant Articles',
-		'instant_articles_page_id'               => 'The Facebook Page ID to post to Instant Articles',
+		'instant_articles_page_token' => 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken" target="_blank"/">Generate one here</a>. (Click "debug", and extend the token)',
+		'instant_articles_app_id'     => 'The Facebook App ID for your Instant Articles',
+		'instant_articles_app_secret' => 'The Facebook App secret for your Instant Articles',
+		'instant_articles_page_id'    => 'The Facebook Page ID to post to Instant Articles',
 	] ) ) {
 	return;
 }
 
-include __DIR__ . '/app/Services/UsefulHooks.php';
-include __DIR__ . '/app/custom-fields/metabox.php';
-include __DIR__ . '/app/Admin/hooks.php';
+include __DIR__ . '/register.php';
+include __DIR__ . '/ajax.php';
+include __DIR__ . '/editor.php';
+include __DIR__ . '/hooks.php';
 
