@@ -106,7 +106,6 @@ abstract class Api {
 			}
 		}
 
-		return Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
 
 	}
 

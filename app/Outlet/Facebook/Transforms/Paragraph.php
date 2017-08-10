@@ -1,27 +1,35 @@
 <?php
+
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 
 
+/**
+ * Class Paragraph
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
 class Paragraph extends AbstractWidget {
-  public function get($widget) {
+	public function getData() {
 
-    $html = $widget['paragraph'];
+		$html = $this->getField( 'paragraph', '' );
 
-    if (preg_match('/data-firebase-id/',$html)) {
-      return;
-    } elseif (preg_match_all('/twitter-tweet|data-instgrm-version/',$html)) {
-      $file = 'social';
-    } else {
-      $file = 'template';
-    }
+		return [
+			'paragraph' => $html
+		];
+	}
 
-    $html_as_string = Timber::compile(
-      './'.$file.'.twig',
-      array(
-        'paragraph' => $html
-      )
-    );
+	public function getTemplate() {
 
-    return $html_as_string;
-  }
+		$html      = $this->getField( 'paragraph', '' );
+		$extension = '.twig';
+
+		if ( preg_match( '/data-firebase-id/', $html ) ) {
+			return null;
+		} elseif ( preg_match_all( '/twitter-tweet|data-instgrm-version/', $html ) ) {
+			$extension = '-social.twig';
+		}
+
+		return str_replace( '.twig', $extension, parent::getTemplate() );
+	}
+
 }

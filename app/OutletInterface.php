@@ -5,15 +5,11 @@ namespace AgreableInstantArticlesPlugin;
 
 
 interface OutletInterface {
-	/**
-	 * @return string
-	 */
-	public function getName();
 
 	/**
 	 * @return GeneratorInterface
 	 */
-	public function getGenerator();
+	public function createGenerator( $post_id );
 
 	/**
 	 * @return ApiInterface
@@ -21,7 +17,7 @@ interface OutletInterface {
 	public function getApi();
 
 	/**
-	 * @return mixed
+	 * @return AdminInterface
 	 */
 	public function getAdmin();
 }

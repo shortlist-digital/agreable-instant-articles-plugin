@@ -4,8 +4,16 @@
 namespace AgreableInstantArticlesPlugin;
 
 
+/**
+ * Interface AdminInterface
+ *
+ * @package AgreableInstantArticlesPlugin
+ */
 interface AdminInterface {
-	public function __construct($post_id);
 
+
+	/**
+	 * @return mixed
+	 */
 	public function renderInterface();
 }

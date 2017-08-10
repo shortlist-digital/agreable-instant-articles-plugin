@@ -9,15 +9,23 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
  *
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
  */
+
+use Croissant\Helper\ArrayHelper;
+
+/**
+ * Class AbstractWidget
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
 class AbstractWidget {
 	/**
 	 * @var array
 	 */
-	private $data = [];
+	protected $data = [];
 	/**
 	 * @var int
 	 */
-	private $post_id;
+	protected $post_id;
 	/**
 	 * @var \Twig_Environment
 	 */
@@ -36,14 +44,22 @@ class AbstractWidget {
 	}
 
 	/**
-	 * @return array
+	 * Prepares data for templates
+	 *
+	 * @return array|null
 	 */
 	public function getData() {
 		return $this->data;
 	}
 
-	public function getField( $name, $default = null ) {
-		return isset( $this->data[ $name ] ) ? $this->data[ $name ] : $default;
+	/**
+	 * @param $path
+	 * @param null $default
+	 *
+	 * @return mixed|null
+	 */
+	public function getField( $path, $default = null ) {
+		return ArrayHelper::getValueByPath( $this->data, $path, $default );
 
 	}
 
@@ -68,6 +84,8 @@ class AbstractWidget {
 	}
 
 	/**
+	 * If null returned template will not be rendered
+	 *
 	 * @return string
 	 */
 	public function getTemplate() {
@@ -75,7 +93,7 @@ class AbstractWidget {
 		$classSegments = explode( '\\', static::class );
 		$name          = array_pop( $classSegments );
 
-		return 'widgets/' . self::camel2dashed( $name );
+		return 'widgets/' . self::camel2dashed( $name ) . '.twig';
 
 	}
 
@@ -90,7 +108,9 @@ class AbstractWidget {
 
 		$loader     = new \Twig_Loader_Filesystem( dirname( __DIR__ ) . '/views' );
 		self::$twig = new \Twig_Environment( $loader, array(
-			'cache' => false,
+			'cache'      => false,
+			'debug'      => true,
+			'autoescape' => false
 		) );
 
 		return self::$twig;
@@ -102,7 +122,17 @@ class AbstractWidget {
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->getTwigInstance()->render( $this->getTemplate(), $this->getData() );
+
+		$template = $this->getTemplate();
+		if ( $template === null ) {
+			return '';
+		}
+
+		try {
+			return $this->getTwigInstance()->render( $template, $this->getData() );
+		} catch ( \Exception $e ) {
+			return 'Error while processing' . $this->getTemplate() . ': ' . $e->getMessage();
+		}
 	}
 
 }

@@ -8,6 +8,6 @@ namespace AgreableInstantArticlesPlugin\Exceptions;
  *
  * @package AgreableInstantArticlesPlugin\Exceptions
  */
-class ApiFailException extends \Exception {
+class ApiException extends \Exception {
 
 }

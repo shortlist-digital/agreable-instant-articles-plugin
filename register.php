@@ -2,9 +2,7 @@
 
 
 add_filter( 'shortlist_get_outlets', function ( $outlets ) {
-	$outlets[] = new \AgreableInstantArticlesPlugin\Outlet\Facebook\Outlet( 'fb_default' );
-} );
+	$outlets['fb'] = new \AgreableInstantArticlesPlugin\Outlet\Facebook\Outlet();
 
-add_filter( 'shortlist_get_outlets', function ( $outlets ) {
-	$outlets[] = new \AgreableInstantArticlesPlugin\Outlet\Facebook\Outlet( 'fb_2nd' );
+	return $outlets;
 } );

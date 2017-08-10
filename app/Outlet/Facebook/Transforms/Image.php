@@ -1,23 +1,30 @@
 <?php
+
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 
 
+/**
+ * Class Image
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
 class Image extends AbstractWidget {
 
-  public function get($widget) {
+	/**
+	 * @param $widget
+	 *
+	 * @return array
+	 */
+	public function getData() {
 
-    $image = $widget['image']['url'];
-    $caption = strip_tags($widget['caption']);
+		$image   = $this->getField( 'image.url', null );
+		$caption = strip_tags( $this->getField( 'caption' ) );
 
-    $html_as_string = Timber::compile(
-      './template.twig',
-      array(
-        'image' => $image,
-        'caption' => $caption
-      )
-    );
 
-    return $html_as_string;
+		return array(
+			'image'   => $image,
+			'caption' => $caption
+		);
 
-  }
+	}
 }

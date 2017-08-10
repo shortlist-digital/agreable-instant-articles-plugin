@@ -1,28 +1,34 @@
 <?php
+
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 
 
+/**
+ * Class ListItem
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
 class ListItem extends AbstractWidget {
-  public function get($widget) {
+	/**
+	 * @param $widget
+	 *
+	 * @return array
+	 */
+	public function getData() {
 
-    $heading = strip_tags($widget['heading']);
-    $heading = html_entity_decode($heading);
+		$heading = strip_tags( $this->getField( 'heading' ) );
+		$heading = html_entity_decode( $heading );
 
-    $image = $widget['image']['url'];
+		$image = $this->getField( 'image.url' );
 
-    $caption = strip_tags($widget['copy']);
-    $caption = html_entity_decode($caption);
+		$caption = strip_tags( $this->getField( 'copy' ) );
+		$caption = html_entity_decode( $caption );
 
-    $html_as_string = Timber::compile(
-      './template.twig',
-      array(
-        'heading' => $heading,
-        'image' => $image,
-        'caption' => $caption
-      )
-    );
-
-    return $html_as_string;
-  }
+		return array(
+			'heading' => trim( $heading ),
+			'image'   => trim( $image ),
+			'caption' => trim( $caption )
+		);
+	}
 }
 

@@ -1,0 +1,9 @@
+<figure class="op-ad {% if default_ad %}op-ad-default{% endif %}">
+    <iframe src="{{ advert_url_base ~ '/' ~ type ~ '/' ~ targeting_key_values }}"
+            {% if type == 'horizontal' %}
+                width="320" height="50"
+            {% endif %}
+            {% if type == 'vertical' %}
+                width="300" height="600"
+            {% endif %}></iframe>
+</figure>

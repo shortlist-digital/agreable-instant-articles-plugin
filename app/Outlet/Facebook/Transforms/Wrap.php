@@ -3,41 +3,61 @@
 
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 
+use AgreableInstantArticlesPlugin\Outlet\Facebook\Helpers\PostObject;
 
+
+/**
+ * Class Wrap
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
+
+/**
+ * Class Wrap
+ *
+ * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
+ */
 class Wrap extends AbstractWidget {
-	public function __construct( $post_id ) {
-		parent::__construct( [], $post_id );
-	}
 
+	/**
+	 * @return array
+	 */
 	public function getData() {
 
-		$post  = new \TimberPost( $this->post_id );
-		$title = get_the_title( $this->post_id );
 
-		if ( strlen( $title ) < 250 ) {
-			$title = $post->title;
-		} else {
-			$title = get_field( 'short_headline', $this->post_id );
+		$site = new \ArrayObject( [ 'name' => get_bloginfo( 'name' ),'description' => get_bloginfo( 'description' )] );
+
+
+		$post = new PostObject( $this->post_id );
+
+		/**
+		 * @var $categories \WP_Term[]
+		 */
+		$categories = wp_get_post_terms( $this->post_id, 'category' );
+		$cat        = null;
+		if ( count( $categories ) > 0 ) {
+			$cat       = new \stdClass();
+			$cat->name = $categories[0]->name;
+			$cat->slug = $categories[0]->slug;
 		}
 
-		$category = $post->terms( 'category' );
-
-
 		return array(
-			'site'               => new TimberSite(),
-			'post'               => $post,
-			'post_category'      => $post->post_category,
-			'post_category_slug' => $category[0]->slug,
-			'post_date'          => gmdate( 'd M Y', strtotime( $post->post_date ) ),
-			'adverts'            => $this->get_adverts( $post ),
-			'canonical_url'      => $post->get_field( 'catfish_importer_url' ),
+			'site'          => $site,
+			'post'          => $post,
+			'category'      => $cat,
+			'content'       => $this->getField( 'content' ),
+			'post_date'     => gmdate( 'd M Y', strtotime( $post->post_date ) ),
+			'adverts'       => $this->getAdverts(),
+			'canonical_url' => get_permalink( $this->post_id ),
 		);
 	}
 
-	protected function get_adverts( $post ) {
-		$widgets_directory = get_stylesheet_directory() . '/views/widgets';
-		include_once $widgets_directory . '/advert-slot/generators/instant-articles/generator.php';
-		$ad_generator = new \Agreable\Widgets\AdvertSlot\Generators\InstantArticles\Generator();
+
+	/**
+	 * @return \stdClass
+	 */
+	protected function getAdverts() {
+
 
 		$head_ad_widget = [
 			'acf_fc_layout' => 'advert-slot',
@@ -59,19 +79,34 @@ class Wrap extends AbstractWidget {
 		];
 
 		$adverts       = new \stdClass();
-		$adverts->head = $ad_generator->get( $head_ad_widget, $post );
+		$adverts->head = new AdvertSlot( $head_ad_widget, $this->post_id );
 		$adverts->body = [];
 		foreach ( $body_ad_widgets as $index => $body_ad_widget ) {
 			if ( ( $index + 1 ) === count( $body_ad_widgets ) ) {
 				$body_ad_widget['default_ad'] = true;
 			}
-			$adverts->body[] = $ad_generator->get( $body_ad_widget, $post );
+			$adverts->body[] = new AdvertSlot( $body_ad_widget, $this->post_id );
 		}
 
 		return $adverts;
 	}
 
+
+	/**
+	 * @return string
+	 */
 	public function getTemplate() {
 		return 'base.twig';
+	}
+
+	public function __toString() {
+
+		$template = $this->getTemplate();
+
+		if ( $template === null ) {
+			return '';
+		}
+
+		return $this->getTwigInstance()->render( $template, $this->getData() );
 	}
 }
