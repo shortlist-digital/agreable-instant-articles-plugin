@@ -31,8 +31,10 @@ class Helper {
 	 */
 	public static function getOutletByKey( $name ) {
 		$outlets = self::getOutlets();
-		if ( isset( $outlets[ $name ] ) ) {
-			return $outlets[ $name ];
+		foreach ( $outlets as $index => $outlet ) {
+			if ( $outlet->getUniqueKey() === $name ) {
+				return $outlet;
+			}
 		}
 
 		return false;
@@ -47,6 +49,6 @@ class Helper {
 
 		$web_base_url = getenv( 'WEB_BASE_PROTOCOL' ) . getenv( 'WEB_BASE_DOMAIN' );
 
-		return str_replace( $web_base_url, getenv( 'WP_HOME' ), $permalink );
+		return rtrim( str_replace( rtrim( $web_base_url, '/' ), rtrim( getenv( 'WP_HOME' ), '/' ), $permalink ), '/' );
 	}
 }

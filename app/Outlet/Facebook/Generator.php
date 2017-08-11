@@ -6,6 +6,7 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 use AgreableInstantArticlesPlugin\Exceptions\GeneratorException;
 use AgreableInstantArticlesPlugin\GeneratorInterface;
+use AgreableInstantArticlesPlugin\Helper;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Html;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Image;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\ListItem;
@@ -14,6 +15,8 @@ use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\PullQuote;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Wrap;
 use Croissant\App;
 use Croissant\DI\Interfaces\InstantArticlesLogger;
+use Facebook\InstantArticles\Elements\InstantArticle;
+use Facebook\InstantArticles\Transformer\Transformer;
 
 /**
  * Class Generator
@@ -69,9 +72,28 @@ class Generator implements GeneratorInterface {
 	}
 
 	/**
-	 * @return mixed|void
+	 * @return InstantArticle
 	 */
-	public function getWidgetList() {
+	public function get() {
+
+		$widgetsHtml = implode( PHP_EOL, $this->getWidgetsHtmlOutputs() );
+
+		$wrap = new Wrap( [ 'content' => $widgetsHtml ], $this->post_id );
+
+		return $this->transform( (string) $wrap );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function render() {
+		return $this->get()->render();
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getWidgetList() {
 
 		$list = [
 			'html'       => Html::class,
@@ -89,18 +111,10 @@ class Generator implements GeneratorInterface {
 	}
 
 	/**
-	 *
-	 * @return bool
-	 */
-	public function qualifies() {
-		return true;
-	}
-
-	/**
 	 * @throws GeneratorException
 	 * @return array
 	 */
-	public function getWidgetsHtmlOutputs() {
+	private function getWidgetsHtmlOutputs() {
 
 		/**
 		 * Makes sure items are created only once
@@ -156,31 +170,59 @@ class Generator implements GeneratorInterface {
 	/**
 	 * @return array
 	 */
-	public function getStats() {
+	public function getStats($uKey) {
 		$this->stats['missing_names'] = array_unique( $this->stats['missing_names'] );
 		$this->stats['all']           = count( $this->getWidgetsData() );
 		$this->stats['rendered']      = count( $this->getWidgetsHtmlOutputs() );
 		$this->stats['missing']       = $this->stats['all'] - $this->stats['missing'];
+		$this->stats['link']          = implode( '/', [
+			Helper::reverseLinkReplacement( get_permalink() ),
+			'sharing_center',
+			$uKey,
+			'generate'
+		] );
 
 		return $this->stats;
 	}
 
+
 	/**
-	 * @return Wrap
+	 * @param $html
+	 *
+	 * @return InstantArticle
 	 */
-	public function render() {
+	private function transform( $html ) {
+		// Loads the rules content file
+		$rules_file_content = file_get_contents( __DIR__ . "/simple-rules.json", true );
 
-		$widgetsHtml = implode( PHP_EOL, $this->getWidgetsHtmlOutputs() );
+		// Instantiate Instant article
+		$instant_article = InstantArticle::create();
 
-		$wrap = new Wrap( [ 'content' => $widgetsHtml ], $this->post_id );
+		// Creates the transformer and loads the rules
+		$transformer = new Transformer();
+		$transformer->loadRules( $rules_file_content );
 
-		return $wrap;
+
+		// Ignores errors on HTML parsing
+		libxml_use_internal_errors( true );
+		$document = new \DOMDocument();
+		$document->loadHTML( $html );
+		libxml_use_internal_errors( false );
+
+		// Invokes transformer
+		$transformer->transform( $instant_article, $document );
+
+		// Get errors from transformer
+		$warnings = $transformer->getWarnings();
+
+		// Renders the InstantArticle markup format
+		return $instant_article;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getWidgetsData() {
+	private function getWidgetsData() {
 		if ( is_null( $this->widgetsData ) ) {
 			$widgets           = get_field( 'widgets', $this->post_id );
 			$this->widgetsData = is_null( $widgets ) ? [] : $widgets;

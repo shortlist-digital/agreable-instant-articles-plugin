@@ -7,12 +7,6 @@ namespace AgreableInstantArticlesPlugin;
 use AgreableInstantArticlesPlugin\Exceptions\ApiException;
 
 interface ApiInterface {
-	/**
-	 * @param $post_id int
-	 *
-	 * @return int Outlet id of element
-	 */
-	public function add( $post_id );
 
 	/**
 	 * @param $post_id
@@ -20,7 +14,7 @@ interface ApiInterface {
 	 * @return int
 	 * @throws ApiException
 	 */
-	public function update( $post_id );
+	public function update( $post_id,$content );
 
 	/**
 	 * @param $post_id
@@ -32,5 +26,11 @@ interface ApiInterface {
 	/**
 	 * @return mixed
 	 */
-	public function getStatus();
+	public function getStatus( $post_id );
+
+	/**
+	 * @return string
+	 */
+	public function getUniqueKey();
+
 }

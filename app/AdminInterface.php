@@ -13,7 +13,17 @@ interface AdminInterface {
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
-	public function renderInterface();
+	public function render();
+
+	/**
+	 * @return bool
+	 */
+	public function handleChange();
+
+	/**
+	 * @return string
+	 */
+	public function printStats();
 }

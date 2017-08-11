@@ -4,7 +4,6 @@
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 
-use AgreableInstantArticlesPlugin\AdminInterface;
 use AgreableInstantArticlesPlugin\ApiInterface;
 use AgreableInstantArticlesPlugin\GeneratorInterface;
 use AgreableInstantArticlesPlugin\OutletInterface;
@@ -35,8 +34,10 @@ class Outlet implements OutletInterface {
 			'app_secret' => null,
 			'page_token' => null,
 			'page_id'    => null,
-			'debug'      => null
+			'debug'      => null,
+			'name'       => 'Instant Articles',
 		], $config );
+
 	}
 
 	/**
@@ -53,35 +54,33 @@ class Outlet implements OutletInterface {
 		if ( $this->api ) {
 			return $this->api;
 		}
-		if ( $this->config['app_id'] === null ) {
-			$this->config['app_id'] = getenv( 'INSTANT_ARTICLES_APP_ID' );
-		}
-		if ( $this->config['app_secret'] === null ) {
-			$this->config['app_secret'] = getenv( 'INSTANT_ARTICLES_APP_SECRET' );
-		}
-		if ( $this->config['page_token'] === null ) {
-			$this->config['page_token'] = getenv( 'INSTANT_ARTICLES_PAGE_TOKEN' );
-		}
-		if ( $this->config['page_id'] === null ) {
-			$this->config['page_id'] = getenv( 'INSTANT_ARTICLES_PAGE_ID' );
-		}
-		if ( $this->config['debug'] === null ) {
-			if ( getenv( 'FB_INSTANT_ARTICLES_DEVELOPMENT_MODE' ) === "false" ) {
-				$this->config['debug'] = false;
-			} else {
-				$this->config['debug'] = true;
-			}
-		}
 
+		$this->api = new Api( $this->config['app_id'], $this->config['app_secret'], $this->config['page_token'], $this->config['page_id'], true );
 
-		$this->api = new Api( $this->config['app_id'], $this->config['app_secret'],  $this->config['page_token'],  $this->config['page_id'], true );
-
+		return $this->api;
 	}
 
 	/**
-	 * @return AdminInterface
+	 * @return string
+	 */
+	public function getUniqueKey() {
+		return $this->getApi()->getUniqueKey();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->config['name'];
+	}
+
+
+	/**
+	 * @return Admin
 	 */
 	public function getAdmin() {
-		// TODO: Implement getAdmin() method.
+		return new Admin( $this, $this->getName() );
 	}
+
+
 }

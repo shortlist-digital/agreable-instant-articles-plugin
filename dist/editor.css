@@ -1,0 +1,91 @@
+/**
+Clearfix
+ */
+
+.sharing_center *, .sharing_center_debug {
+    box-sizing: border-box;
+}
+
+.sharing_center:after, .sharing_center_debug:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.sharing_center_box_label, .sharing_center_box {
+    float: left;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 33.333333333333333%;
+    overflow: hidden;
+    position: relative;
+}
+
+.sharing_center_box input {
+    margin-left: -30px;
+    position: absolute;
+}
+
+.sharing_center_box_label {
+    font-weight: bold;
+    padding: 20px 0px;
+    line-height: 15px;
+}
+
+.sharing_center_box input:checked {
+
+}
+
+.sharing_center_box .dashicons {
+    display: block;
+    min-width: 50px;
+    transition: min-width .4s cubic-bezier(.19, 1, .22, 1) .4s, background .4s cubic-bezier(.19, 1, .22, 1);
+    height: 50px;
+    padding: 10px;
+    border-radius: 25px;
+    background: #FFDA91;
+    position: relative;
+    text-align: left;
+}
+
+.sharing_center_box input:checked + .dashicons {
+    background: #4CD964;
+
+}
+
+.sharing_center_box .dashicons:before {
+    margin-left: 2px;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.sharing_center_box:hover .dashicons {
+    min-width: 100%;
+    transition: min-width .4s cubic-bezier(.19, 1, .22, 1), background .4s cubic-bezier(.19, 1, .22, 1);
+}
+
+.sharing_center_box .dashicons::after {
+    content: attr(alt) " ";
+    font-size: 12px;
+    line-height: 15px;
+    text-align: left;
+    margin-top: -1px;
+    display: block;
+    left: 45px;
+    top: 50%;
+    position: absolute;
+    text-transform: uppercase;
+    transform: translate(0, -50%);
+    opacity: 0;
+    transition: opacity .4s cubic-bezier(.19, 1, .22, 1);
+}
+
+.sharing_center_box:hover .dashicons::after {
+    opacity: 1;
+    transition: opacity .4s cubic-bezier(.19, 1, .22, 1) .4s;
+}
+
+.sharing_center_debug_box {
+    width: 33.333333333333333%;
+    float: left;
+}

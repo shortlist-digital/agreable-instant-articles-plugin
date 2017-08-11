@@ -20,4 +20,10 @@ interface OutletInterface {
 	 * @return AdminInterface
 	 */
 	public function getAdmin();
+
+	/**
+	 * @return string
+	 */
+	public function getUniqueKey();
+
 }

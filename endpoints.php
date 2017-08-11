@@ -63,7 +63,7 @@ add_filter( 'single_template', function () {
 		case ( 'generate' ):
 
 			$html = $outlet->createGenerator( get_the_ID() )->render()->__toString();
-			include __DIR__ . '/views/editor.php';
+			include __DIR__ . '/views/viewer.php';
 
 			break;
 		case( 'stats' ):
