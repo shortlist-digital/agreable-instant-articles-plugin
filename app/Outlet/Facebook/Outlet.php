@@ -38,6 +38,7 @@ class Outlet implements OutletInterface {
 			'name'       => 'Instant Articles',
 		], $config );
 
+
 	}
 
 	/**
