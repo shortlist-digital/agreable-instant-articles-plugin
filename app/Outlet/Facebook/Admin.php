@@ -131,13 +131,12 @@ class Admin implements AdminInterface {
 		$this->getGenerator()->get();
 		$gen_stats = $this->getGenerator()->getStats( $this->key );
 		$api_stats = $this->api->getStats( $this->post_id );
-		var_dump( $api_stats );
-		exit;
+
 		$rows = [ '<span>Generator</span>' ];
 
 		foreach ( $gen_stats as $index => $gen_stat ) {
-			if ( is_array( $gen_stat ) ) {
-
+			if ( is_array( $gen_stat ) || is_object( $gen_stat ) ) {
+				$rows[] = "<span>$index: " . json_encode( $gen_stat ) . "</span>";
 			}
 			$rows[] = "<span>$index: $gen_stat</span>";
 		}

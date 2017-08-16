@@ -5,7 +5,10 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 
 use AgreableInstantArticlesPlugin\ApiInterface;
+use Facebook\Authentication\AccessToken;
+use Facebook\GraphNodes\GraphNode;
 use Facebook\InstantArticles\Client\Client;
+use Facebook\InstantArticles\Client\Helper;
 use Facebook\InstantArticles\Client\InstantArticleStatus;
 use Facebook\InstantArticles\Elements\InstantArticle;
 
@@ -19,6 +22,18 @@ class Api implements ApiInterface {
 	 * @var Client
 	 */
 	private $client;
+	/**
+	 * @var int
+	 */
+	private $appId;
+	/**
+	 * @var string
+	 */
+	private $appSecret;
+	/**
+	 * @var string
+	 */
+	private $userToken;
 	/**
 	 * @var string created from app id/page_id/mode everything else can be changed
 	 */
@@ -41,15 +56,20 @@ class Api implements ApiInterface {
 	/**
 	 * Api constructor.
 	 *
-	 * @param $appID
-	 * @param $appSecret
-	 * @param $accessToken
-	 * @param $pageID
+	 * @param $appID int
+	 * @param $appSecret string
+	 * @param $userToken string
+	 * @param $pageID int
 	 * @param $developmentMode
 	 */
-	public function __construct( $appID, $appSecret, $accessToken, $pageID, $developmentMode ) {
+	public function __construct( $appID, $appSecret, $userToken, $pageID, $developmentMode ) {
+		$this->appId     = $appID;
+		$this->appSecret = $appSecret;
+		$this->userToken = $userToken;
 		$this->uniqueKey = implode( '_', [ 'ia', $appID, $pageID, $developmentMode ? 'dev' : 'prod' ] );
+		$accessToken     = $this->getPageAccessToken( $pageID );
 		$this->client    = Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
+
 	}
 
 	/**
@@ -98,6 +118,48 @@ class Api implements ApiInterface {
 		$this->setSubmissionId( $post_id, null );
 
 
+	}
+
+	public function getPageAccessToken( $id ) {
+
+		$accessToken = $this->getOption( 'page_access_token_' . $id );
+
+		if ( ! $accessToken ) {
+			$helper = Helper::create(
+				$this->appId,
+				$this->appSecret
+			);
+			/**
+			 * @var $pages GraphNode
+			 */
+
+			$pages = $helper->getPagesAndTokens( new AccessToken( $this->userToken ) );
+			var_dump( $pages );
+			exit;
+
+			foreach ( $pages as $index => $page ) {
+				$sId = $page->getField( 'id' );
+				if ( $sId == $id ) {
+					$accessToken = $page->getField( 'access_token' );
+				}
+				$this->setPageAccessToken( $page->getField( 'id' ), $page->getField( 'access_token' ) );
+			}
+
+		}
+
+		return $accessToken;
+	}
+
+	public function setPageAccessToken( $id, $val ) {
+		$this->setOption( 'page_access_token_' . $id, $val );
+	}
+
+	public function getOption( $name, $def = false ) {
+		return get_option( $this->uniqueKey . '_' . $name, $def );
+	}
+
+	public function setOption( $name, $val ) {
+		return update_option( $this->uniqueKey . '_' . $name, $val );
 	}
 
 	/**

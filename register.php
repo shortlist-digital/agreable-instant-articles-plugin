@@ -7,11 +7,11 @@ add_filter( 'shortlist_get_outlets', function ( $outlets ) {
 
 	// key uid this same as bottom uid
 	$outlets['fb'] = new \AgreableInstantArticlesPlugin\Outlet\Facebook\Outlet( [
-		'app_id'     => getenv( 'INSTANT_ARTICLES_APP_ID' ),
-		'app_secret' => getenv( 'INSTANT_ARTICLES_APP_SECRET' ),
-		'page_token' => getenv( 'INSTANT_ARTICLES_PAGE_TOKEN' ),
-		'page_id'    => getenv( 'INSTANT_ARTICLES_PAGE_ID' ),
-		'debug'      => ! ( getenv( 'FB_INSTANT_ARTICLES_DEVELOPMENT_MODE' ) === "false" ),
+		'app_id'       => getenv( 'INSTANT_ARTICLES_APP_ID' ),
+		'app_secret'   => getenv( 'INSTANT_ARTICLES_APP_SECRET' ),
+		'page_id'      => getenv( 'INSTANT_ARTICLES_PAGE_ID' ),
+		'user_token' => getenv( 'INSTANT_ARTICLES_USER_TOKEN' ),
+		'debug'        => ! ( getenv( 'FB_INSTANT_ARTICLES_DEVELOPMENT_MODE' ) === "false" ),
 	] );
 
 	/*	if ( is_super_admin() ) {

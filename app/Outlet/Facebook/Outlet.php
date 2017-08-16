@@ -32,7 +32,7 @@ class Outlet implements OutletInterface {
 		$this->config = array_merge( [
 			'app_id'     => null,
 			'app_secret' => null,
-			'page_token' => null,
+			'user_token' => null,
 			'page_id'    => null,
 			'debug'      => null,
 			'name'       => 'Instant Articles',
@@ -56,7 +56,7 @@ class Outlet implements OutletInterface {
 			return $this->api;
 		}
 
-		$this->api = new Api( $this->config['app_id'], $this->config['app_secret'], $this->config['page_token'], $this->config['page_id'], true );
+		$this->api = new Api( $this->config['app_id'], $this->config['app_secret'], $this->config['user_token'], $this->config['page_id'], true );
 
 		return $this->api;
 	}

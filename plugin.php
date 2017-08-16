@@ -11,7 +11,7 @@
  */
 
 if ( class_exists( '\Croissant\Helper\RequiredEnv' ) && ! \Croissant\Helper\RequiredEnv::variables( [
-		'instant_articles_page_token' => 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken" target="_blank"/">Generate one here</a>. (Click "debug", and extend the token)',
+		'instant_articles_user_token' => 'A user access token for someone with access to the relevant Facebook Page.</br><a href="https://developers.facebook.com/tools/accesstoken" target="_blank"/">Generate one here</a>. (Click "debug", and extend the token)',
 		'instant_articles_app_id'     => 'The Facebook App ID for your Instant Articles',
 		'instant_articles_app_secret' => 'The Facebook App secret for your Instant Articles',
 		'instant_articles_page_id'    => 'The Facebook Page ID to post to Instant Articles',
