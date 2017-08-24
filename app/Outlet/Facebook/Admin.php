@@ -137,8 +137,10 @@ class Admin implements AdminInterface {
 		foreach ( $gen_stats as $index => $gen_stat ) {
 			if ( is_array( $gen_stat ) || is_object( $gen_stat ) ) {
 				$rows[] = "<span>$index: " . json_encode( $gen_stat ) . "</span>";
+			} else {
+				$rows[] = "<span>$index: $gen_stat</span>";
 			}
-			$rows[] = "<span>$index: $gen_stat</span>";
+
 		}
 
 		$rows[] = '<span>Api</span>';

@@ -33,12 +33,12 @@
             {{ post_date }}
         </time>
 
-        <section class="op-ad-template">
+        <div class="op-ad-template">
             <!-- Ads to be automatically placed throughout the article -->
             {% for advert in adverts.body %}
                 {{ advert }}
             {% endfor %}
-        </section>
+        </div>
     </header>
     <!-- Content -->
     {{ content|raw }}

@@ -15,8 +15,14 @@ use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\PullQuote;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Wrap;
 use Croissant\App;
 use Croissant\DI\Interfaces\InstantArticlesLogger;
+use Croissant\DI\Interfaces\Paths;
 use Facebook\InstantArticles\Elements\InstantArticle;
-use Facebook\InstantArticles\Transformer\Transformer;
+use Facebook\InstantArticles\Parser\Parser;
+
+
+/**
+ *
+ */
 
 /**
  * Class Generator
@@ -58,6 +64,8 @@ class Generator implements GeneratorInterface {
 	 */
 	private $_logger;
 
+	private static $logFile;
+
 	/**
 	 * Generator constructor.
 	 *
@@ -80,7 +88,7 @@ class Generator implements GeneratorInterface {
 
 		$wrap = new Wrap( [ 'content' => $widgetsHtml ], $this->post_id );
 
-		return $this->transform( (string) $wrap );
+		return $this->parse( (string) $wrap );
 	}
 
 	/**
@@ -170,7 +178,7 @@ class Generator implements GeneratorInterface {
 	/**
 	 * @return array
 	 */
-	public function getStats($uKey) {
+	public function getStats( $uKey ) {
 		$this->stats['missing_names'] = array_unique( $this->stats['missing_names'] );
 		$this->stats['all']           = count( $this->getWidgetsData() );
 		$this->stats['rendered']      = count( $this->getWidgetsHtmlOutputs() );
@@ -191,32 +199,53 @@ class Generator implements GeneratorInterface {
 	 *
 	 * @return InstantArticle
 	 */
-	private function transform( $html ) {
-		// Loads the rules content file
-		$rules_file_content = file_get_contents( __DIR__ . "/simple-rules.json", true );
+	private function parse( $html ) {
+		$this->silenceLogger();
+		$parser = new Parser();
+		$html   = $parser->parse( $html );
 
-		// Instantiate Instant article
-		$instant_article = InstantArticle::create();
+		return $html;
+	}
 
-		// Creates the transformer and loads the rules
-		$transformer = new Transformer();
-		$transformer->loadRules( $rules_file_content );
+	public function silenceLogger() {
+		/**
+		 * @var $logger \Logger
+		 */
+		$file = $this->getLogFile();
+		file_put_contents( $file, '' );
+		\Logger::configure( array(
+			'rootLogger' => array(
+				'level'     => 'WARN',
+				'appenders' => array( 'default' ),
+			),
+			'appenders'  => array(
+				'default' => array(
+					'class'  => 'LoggerAppenderFile',
+					'layout' => array(
+						'class' => 'LoggerLayoutSimple'
+					),
+					'params' => array(
+						'file'   => $file,
+						'append' => true
+					)
+				)
+			)
+		) );
+		$logger = \Logger::getLogger( 'facebook-instantarticles-transformer' );
+		$logger->removeAllAppenders();
+	}
 
+	public function getLoggerOutput() {
+		return trim( file_get_contents( $this->getLogFile() ) );
 
-		// Ignores errors on HTML parsing
-		libxml_use_internal_errors( true );
-		$document = new \DOMDocument();
-		$document->loadHTML( $html );
-		libxml_use_internal_errors( false );
+	}
 
-		// Invokes transformer
-		$transformer->transform( $instant_article, $document );
+	public function getLogFile() {
+		if ( ! self::$logFile ) {
+			self::$logFile = App::get( Paths::class )->getLogsPath() . '/fb_generator.log';
+		}
 
-		// Get errors from transformer
-		$warnings = $transformer->getWarnings();
-
-		// Renders the InstantArticle markup format
-		return $instant_article;
+		return self::$logFile;
 	}
 
 	/**

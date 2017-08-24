@@ -133,9 +133,7 @@ class Api implements ApiInterface {
 			 * @var $pages GraphNode
 			 */
 
-			$pages = $helper->getPagesAndTokens( new AccessToken( $this->userToken ) );
-			var_dump( $pages );
-			exit;
+			$pages = $helper->getPagesAndTokens( new AccessToken( $this->userToken ) )->all();
 
 			foreach ( $pages as $index => $page ) {
 				$sId = $page->getField( 'id' );
