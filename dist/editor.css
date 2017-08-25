@@ -2,16 +2,19 @@
 Clearfix
  */
 
+/*noinspection ALL*/
 .sharing_center *, .sharing_center_debug {
     box-sizing: border-box;
 }
 
+/*noinspection ALL*/
 .sharing_center:after, .sharing_center_debug:after {
     content: "";
     display: table;
     clear: both;
 }
 
+/*noinspection ALL*/
 .sharing_center_box_label, .sharing_center_box {
     float: left;
     padding: 10px;
@@ -26,9 +29,10 @@ Clearfix
     position: absolute;
 }
 
+/*noinspection ALL*/
 .sharing_center_box_label {
     font-weight: bold;
-    padding: 20px 0px;
+    padding: 20px 0;
     line-height: 15px;
 }
 
@@ -85,6 +89,7 @@ Clearfix
     transition: opacity .4s cubic-bezier(.19, 1, .22, 1) .4s;
 }
 
+/*noinspection ALL*/
 .sharing_center_debug_box {
     width: 33.333333333333333%;
     float: left;

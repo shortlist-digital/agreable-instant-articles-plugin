@@ -4,29 +4,22 @@
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 
-use AgreableInstantArticlesPlugin\AdminInterface;
-use AgreableInstantArticlesPlugin\ApiInterface;
 use AgreableInstantArticlesPlugin\Helper;
 use AgreableInstantArticlesPlugin\OutletInterface;
 use Croissant\Helper\ArrayHelper;
 use Facebook\InstantArticles\Elements\InstantArticle;
 
 /**
- * Class Admin
- *
+ * Class PostManager
+ * Post manager is responsible for all the post related actions Like saving post fields etc.
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook
  */
-class Admin implements AdminInterface {
+class PostManager {
 
 	/**
-	 * @var ApiInterface
+	 * @var Api
 	 */
 	private $api;
-
-	/**
-	 * @var string
-	 */
-	private $name;
 
 	/**
 	 * @var string
@@ -50,21 +43,6 @@ class Admin implements AdminInterface {
 	private $outlet;
 
 	/**
-	 * DEBUGGING
-	 */
-	const WILL_UPDATE = 'WILL_UPDATE';
-
-	/**
-	 * DEBUGGING
-	 */
-	const WILL_DELETE = 'WILL_DELETE';
-
-	/**
-	 * DEBUGGING
-	 */
-	const WILL_CREATE = 'WILL_CREATE';
-
-	/**
 	 *
 	 */
 	const ACTIVE_STATUS = 'publish';
@@ -76,11 +54,9 @@ class Admin implements AdminInterface {
 	 * @param $name
 	 * @param null $post_id
 	 */
-	public function __construct( OutletInterface $outlet, $name, $post_id = null ) {
+	public function __construct( OutletInterface $outlet, $post_id = null ) {
 
-		$this->api = $outlet->getApi();
-
-		$this->name   = $name;
+		$this->api    = $outlet->getApi();
 		$this->key    = $this->api->getUniqueKey();
 		$this->outlet = $outlet;
 
@@ -89,19 +65,15 @@ class Admin implements AdminInterface {
 		}
 	}
 
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return '<label><input name="sharing_center[' . $this->key . ']" type="checkbox" value="1" ' . ( $this->isActive() ? 'checked' : '' ) . '><span class="dashicons dashicons-facebook-alt" alt="' . esc_attr( $this->getName() ) . '"></span></label>';
-	}
 
 	/**
+	 * @param $post_id int
+	 *
 	 * @return bool
 	 */
 	public function handleChange() {
 		$action    = null;
-		$wasActive = $this->isActive();
+		$wasActive = $this->isSyncActive();
 		$isActive  = $wasActive;
 		if ( $this->isAdminRequest() ) {
 			$isActive = $this->updateCheckbox();
@@ -109,16 +81,16 @@ class Admin implements AdminInterface {
 
 		if ( $isActive && get_post_status( $this->post_id ) === self::ACTIVE_STATUS ) {
 
-			$insta = $this->getInstantArticle();
+			$instant = $this->getInstantArticle();
 
-			$hash      = md5( serialize( $insta ) );
+			$hash      = md5( serialize( $instant ) );
 			$last_hash = $this->getField( 'last_update_hash' );
 			$res       = false;
 
 			if ( $last_hash !== $hash ) {
 
 				Helper::set_notification( self::WILL_UPDATE );
-				$res = $this->api->update( $this->post_id, $insta );
+				$res = $this->api->update( $this->post_id, $instant );
 
 				if ( $res !== false ) {
 					$this->setField( 'last_update_hash', $hash );
@@ -137,9 +109,13 @@ class Admin implements AdminInterface {
 			//$this->api->delete( $this->post_id );
 		}
 
+		return true;
 	}
 
-	public function printStats() {
+	/**
+	 * @return string
+	 */
+	public function printStats(): string {
 
 		$gen_stats = $this->getGenerator()->getStats( $this->key );
 		$api_stats = $this->api->getStats( $this->post_id );
@@ -162,13 +138,6 @@ class Admin implements AdminInterface {
 		}
 
 		return implode( '<br>' . PHP_EOL, $rows );
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName() {
-		return $this->name;
 	}
 
 	/**
@@ -201,7 +170,7 @@ class Admin implements AdminInterface {
 	/**
 	 * @return bool
 	 */
-	public function isActive() {
+	public function isSyncActive() {
 
 		return (bool) $this->getField( 'sync' );
 	}
@@ -218,21 +187,21 @@ class Admin implements AdminInterface {
 	}
 
 	/**
-	 * @param $post_id
 	 * @param $name
 	 * @param null $value
 	 *
 	 * @return bool|int
+	 * @internal param $post_id
 	 */
 	public function setField( $name, $value = null ) {
 		return update_post_meta( $this->post_id, $this->key . '_' . $name, $value );
 	}
 
 	/**
-	 * @param $post_id
 	 * @param $name
 	 *
 	 * @return mixed
+	 * @internal param $post_id
 	 */
 	public function getField( $name ) {
 		return get_post_meta( $this->post_id, $this->key . '_' . $name, true );

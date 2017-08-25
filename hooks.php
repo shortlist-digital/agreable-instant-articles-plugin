@@ -14,7 +14,7 @@ add_action( 'save_post', function ( $post_id ) {
 	$outlets = Helper::getOutlets();
 
 	foreach ( $outlets as $index => $outlet ) {
-		$outlet->getAdmin()->handleChange();
+		$outlet->handleChange( $post_id );
 	}
 } );
 

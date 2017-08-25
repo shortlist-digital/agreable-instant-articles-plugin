@@ -3,6 +3,7 @@
 "share_description": not post.share_description ? post.share_description : post.sell | default(site.description),
 "share_image":       post.getField('share_image.src') | default(post.getField('hero_images.[0].src')) | default(options.default_share_image.url),
 } %}
+
 <html lang="en" prefix="op: http://media.facebook.com/op#">
 <head>
     <meta charset="utf-8">
@@ -77,9 +78,9 @@
                             analytics.SNIPPET_VERSION = "3.1.0";
                             analytics.load("{{ SEGMENT_WRITE_KEY }}");
                             {% if instant_article %}
-                            analytics.identify({
-                                Platform: 'FBInstantArticle'
-                            })
+                                analytics.identify({
+                                    Platform: 'FBInstantArticle'
+                                });
                             {% endif %}
                             analytics.page()
                         }

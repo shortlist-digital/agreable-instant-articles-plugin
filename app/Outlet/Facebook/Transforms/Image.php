@@ -11,9 +11,9 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
 class Image extends AbstractWidget {
 
 	/**
-	 * @param $widget
-	 *
 	 * @return array
+	 * @internal param $widget
+	 *
 	 */
 	public function getData() {
 

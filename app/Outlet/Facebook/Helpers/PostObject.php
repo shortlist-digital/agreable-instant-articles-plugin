@@ -45,16 +45,24 @@ class PostObject extends \ArrayObject {
 	 * @param $name
 	 * @param array $arguments
 	 *
-	 * @return mixed|null|void
+	 * @return mixed|null
 	 */
 	public function __call( $name, $arguments = [] ) {
 		return get_field( $name, $this->post_id );
 	}
 
+	/**
+	 * @param $path
+	 */
 	public function getField( $path ) {
 		ArrayHelper::getValueByPath( $this, $path, null );
 	}
 
+	/**
+	 * @param $name
+	 *
+	 * @return bool
+	 */
 	public function __isset( $name ) {
 		return isset( $this->{$name} );
 	}

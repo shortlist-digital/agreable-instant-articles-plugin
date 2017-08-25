@@ -68,8 +68,8 @@ class Api implements ApiInterface {
 		$this->userToken = $userToken;
 		$this->uniqueKey = implode( '_', [ 'ia', $appID, $pageID, $developmentMode ? 'dev' : 'prod' ] );
 		$accessToken     = $this->getPageAccessToken( $pageID );
-
-		$this->client    = Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
+		exit($developmentMode);
+		$this->client = Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
 
 	}
 
@@ -77,22 +77,22 @@ class Api implements ApiInterface {
 	 * @param $post_id int
 	 * @param $content InstantArticle
 	 *
-	 * @return bool Outlet id of element
+	 * @return string Outlet id of element
 	 */
-	public function update( $post_id, $content ) {
+	public function update( int $post_id, $content ): string {
 
-		$resp = $this->client->importArticle( $content, ( WP_ENV === 'production' ) );
+		$resp = $this->client->importArticle( $content, ( WP_ENV === 'production' ), true, true );
 		$this->setSubmissionId( $post_id, $resp );
 
 		return $resp;
 	}
 
 	/**
-	 * @param $post_id
+	 * @param int $post_id
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function delete( $post_id ) {
+	public function delete( int $post_id ): string {
 
 		$this->client->removeArticle( get_permalink( $post_id ) )->getStatus();
 
@@ -102,17 +102,17 @@ class Api implements ApiInterface {
 		$this->setSubmissionStatus( $post_id, null );
 		$this->setSubmissionId( $post_id, null );
 
-
+		return true;
 	}
 
 	/**
 	 * @param $id
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
-	public function getPageAccessToken( $id ) {
+	public function getPageAccessToken( string $id ): string {
 
-		$accessToken = false;//$this->getOption( 'page_access_token_' . $id );
+		$accessToken = '';//$this->getOption( 'page_access_token_' . $id );
 
 		if ( ! $accessToken ) {
 			$helper = Helper::create(
@@ -120,10 +120,11 @@ class Api implements ApiInterface {
 				$this->appSecret
 			);
 			/**
+			 * @var $edge \Facebook\GraphNodes\GraphEdge
 			 * @var $pages GraphNode
 			 */
-
-			$pages = $helper->getPagesAndTokens( new AccessToken( $this->userToken ) )->all();
+			$edge  = $helper->getPagesAndTokens( new AccessToken( $this->userToken ) );
+			$pages = $edge->all();
 
 			foreach ( $pages as $index => $page ) {
 				$sId = $page->getField( 'id' );
@@ -139,19 +140,12 @@ class Api implements ApiInterface {
 		return $accessToken;
 	}
 
-	/**
-	 * @param $id
-	 * @param $val
-	 */
-	public function setPageAccessToken( $id, $val ) {
-		$this->setOption( 'page_access_token_' . $id, $val );
-	}
 
 	/**
 	 * @param $name
 	 * @param bool $def
 	 *
-	 * @return mixed|void
+	 * @return mixed
 	 */
 	public function getOption( $name, $def = false ) {
 		return get_option( $this->uniqueKey . '_' . $name, $def );
@@ -168,9 +162,11 @@ class Api implements ApiInterface {
 	}
 
 	/**
-	 * @return mixed
+	 * @param int $post_id
+	 *
+	 * @return string
 	 */
-	public function getStatus( $post_id ) {
+	public function getStatus( int $post_id ): string {
 
 
 		$submission_status = $this->getSubmissionStatus( $post_id );
@@ -285,7 +281,7 @@ class Api implements ApiInterface {
 	/**
 	 * @return string
 	 */
-	public function getUniqueKey() {
+	public function getUniqueKey(): string {
 		return $this->uniqueKey;
 	}
 

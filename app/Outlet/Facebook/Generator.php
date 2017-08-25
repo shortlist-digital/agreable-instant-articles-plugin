@@ -87,6 +87,9 @@ class Generator implements GeneratorInterface {
 
 	}
 
+	/**
+	 * @return Wrap
+	 */
 	public function getHtml() {
 		$widgetsHtml = implode( PHP_EOL, $this->getWidgetsHtmlOutputs() );
 
@@ -191,6 +194,8 @@ class Generator implements GeneratorInterface {
 	}
 
 	/**
+	 * @param $uKey
+	 *
 	 * @return array
 	 */
 	public function getStats( $uKey ) {
@@ -202,17 +207,20 @@ class Generator implements GeneratorInterface {
 		$this->stats['warnings']      = array_map( function ( $i ) {
 			return get_class( $i );
 		}, $this->getWarnings() );
-		$this->stats['generator']     = '<a target="_blank" href="' . implode( '/', [
-				Helper::reverseLinkReplacement( get_permalink() ),
-				'sharing_center',
-				$uKey,
-				'generate'
-			] ) . '">template</a>';
-
+		$link                         = implode( '/', [
+			Helper::reverseLinkReplacement( get_permalink() ),
+			'sharing_center',
+			$uKey,
+			'generate'
+		] );
+		$this->stats['generator']     = "<a target='_blank' href='{$link}'>template</a>";
 
 		return $this->stats;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getWarnings() {
 		return $this->getTransformer()->getWarnings();
 	}
@@ -308,6 +316,19 @@ class Generator implements GeneratorInterface {
 		}
 
 		return $this->widgetsData;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function generateDebugCode(): array {
+
+		return [
+
+			'Before Transform' => (string) $this->getHtml(),
+			'After Transform'  => (string) $this->render(),
+			'errors'           => $this->getWarnings(),
+		];
 	}
 
 

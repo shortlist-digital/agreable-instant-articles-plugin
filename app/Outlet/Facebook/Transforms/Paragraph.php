@@ -9,6 +9,9 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms
  */
 class Paragraph extends AbstractWidget {
+	/**
+	 * @return array
+	 */
 	public function getData() {
 
 		$html = $this->getField( 'paragraph', '' );
@@ -18,6 +21,9 @@ class Paragraph extends AbstractWidget {
 		];
 	}
 
+	/**
+	 * @return mixed|null
+	 */
 	public function getTemplate() {
 
 		$html      = $this->getField( 'paragraph', '' );

@@ -2,15 +2,6 @@
 
 use AgreableInstantArticlesPlugin\Helper;
 
-add_action( 'admin_enqueue_scripts', function () {
-
-	$dir = plugin_dir_url( __FILE__ );
-	$dir = str_replace( '/app/plugins/vagrant/web/app/dev/', '/app/mu-plugins/', $dir );
-
-	wp_enqueue_script( 'telemetry-plugin-js', $dir . 'dist/main.js', array(), '1.0.0', true );
-
-} );
-
 add_action( 'add_meta_boxes', function () {
 
 	add_meta_box( 'sharing_center', 'Sharing Center', function () {
@@ -20,7 +11,7 @@ add_action( 'add_meta_boxes', function () {
 		echo "<div class='sharing_center_box_label'>Synchronize with <br> following services:</div>";
 		foreach ( $outlets as $index => $outlet ) {
 			echo '<div class="sharing_center_box" data-key="' . $index . '">'
-			     . $outlet->getAdmin()->render() .
+			     . $outlet->generateInterface( get_the_ID() ) .
 			     '</div>';
 		}
 		echo '</div>';
@@ -34,7 +25,7 @@ add_action( 'add_meta_boxes', function () {
 
 			foreach ( $outlets as $index => $outlet ) {
 				echo '<div class="sharing_center_debug_box">';
-				echo $outlet->getAdmin()->printStats();
+				echo $outlet->getStats( get_the_ID() );
 				echo '</div>';
 			}
 			echo '</div>';

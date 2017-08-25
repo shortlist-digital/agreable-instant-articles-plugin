@@ -6,7 +6,7 @@ namespace AgreableInstantArticlesPlugin;
 function show_404() {
 	status_header( 404 );
 	nocache_headers();
-	exit( 'Sorry, we couldn\'t find what you\'re looking for.' );
+	exit( "Sorry, we couldn't find what you're looking for." );
 }
 
 add_filter( 'query_vars', function ( $vars ) {
@@ -60,22 +60,13 @@ add_filter( 'single_template', function () {
 	 * @var $outlet OutletInterface
 	 */
 	switch ( $action ) {
-		case ( 'generate-before' ):
-			$html = (string) $outlet->createGenerator( get_the_ID() )->prerender();
-			include __DIR__ . '/views/viewer.php';
-
-			break;
 		case ( 'generate' ):
-			$generator = $outlet->createGenerator( get_the_ID() );
-			$html      = (string) $generator->render();
-			$errors    = $generator->getWarnings();
-			$pre       = $generator->getHtml();
-			include __DIR__ . '/views/viewer.php';
 
+			/** @noinspection PhpUnusedLocalVariableInspection */
+			$debug = $outlet->generateExetrnalPageDebugCode( get_the_ID() );
+			include __DIR__ . '/views/viewer.php';
 			break;
-		case( 'stats' ):
-			echo $outlet->getApi()->getStatus( get_the_ID() );
-			break;
+
 		default:
 			throw new \Exception( 'It seems like this action does not exist' );
 	}

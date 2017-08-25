@@ -10,9 +10,9 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms;
  */
 class ListItem extends AbstractWidget {
 	/**
-	 * @param $widget
-	 *
 	 * @return array
+	 * @internal param $widget
+	 *
 	 */
 	public function getData() {
 

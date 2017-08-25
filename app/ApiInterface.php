@@ -4,33 +4,39 @@
 namespace AgreableInstantArticlesPlugin;
 
 
-use AgreableInstantArticlesPlugin\Exceptions\ApiException;
-
+/**
+ * Interface ApiInterface
+ *
+ * @package AgreableInstantArticlesPlugin
+ */
 interface ApiInterface {
 
 	/**
-	 * @param $post_id
+	 * @param int $post_id
 	 *
-	 * @return int
-	 * @throws ApiException
+	 * @param mixed $content
+	 *
+	 * @return string
 	 */
-	public function update( $post_id,$content );
+	public function update( int $post_id, $content ): string;
 
 	/**
-	 * @param $post_id
+	 * @param int $post_id
 	 *
-	 * @return bool
+	 * @return string
 	 */
-	public function delete( $post_id );
+	public function delete( int $post_id ): string;
 
 	/**
-	 * @return mixed
+	 * @param int $post_id
+	 *
+	 * @return string
 	 */
-	public function getStatus( $post_id );
+	public function getStatus( int $post_id ): string;
 
 	/**
 	 * @return string
 	 */
-	public function getUniqueKey();
+	public function getUniqueKey(): string;
 
 }

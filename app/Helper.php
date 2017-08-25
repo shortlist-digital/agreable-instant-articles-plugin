@@ -20,6 +20,9 @@ class Helper {
 	 */
 	private static $outlets;
 
+	/**
+	 * @return OutletInterface[]|mixed
+	 */
 	public static function getOutlets() {
 
 		if ( ! isset( self::$outlets ) ) {
@@ -76,6 +79,8 @@ class Helper {
 
 			delete_transient( self::FLASH_MESSAGE_KEY . $id );
 		}
+
+		return true;
 	}
 
 	/**
@@ -111,6 +116,7 @@ class Helper {
 
 		}
 
+		return true;
 	}
 
 	/**

@@ -99,6 +99,9 @@ class Wrap extends AbstractWidget {
 		return 'base.twig';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function __toString() {
 
 		$template = $this->getTemplate();

@@ -11,9 +11,9 @@ use Sunra\PhpSimple\HtmlDomParser;
  */
 class Html extends AbstractWidget {
 	/**
-	 * @param $widget
-	 *
 	 * @return array
+	 * @internal param $widget
+	 *
 	 */
 	public function getData() {
 
@@ -25,7 +25,8 @@ class Html extends AbstractWidget {
 		if ( isset( $pb[0] ) ) {
 			if ( isset( $pb[0]->{'data-game'} ) && $pb[0]->{'data-game'} ) {
 				$pb[0]->{'data-origin'} = 'instant-article';
-				$embed                  = $embed_dom->innertext;
+				/** @noinspection PhpUndefinedFieldInspection */
+				$embed = $embed_dom->innertext;
 			}
 		}
 

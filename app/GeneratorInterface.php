@@ -4,6 +4,11 @@
 namespace AgreableInstantArticlesPlugin;
 
 
+/**
+ * Interface GeneratorInterface
+ *
+ * @package AgreableInstantArticlesPlugin
+ */
 interface GeneratorInterface {
 	/**
 	 * Generator constructor.
@@ -20,10 +25,9 @@ interface GeneratorInterface {
 	 */
 	public function get();
 
+
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function render();
-
-
+	public function generateDebugCode(): array;
 }
