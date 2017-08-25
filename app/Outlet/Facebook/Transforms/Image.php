@@ -20,7 +20,6 @@ class Image extends AbstractWidget {
 		$image   = $this->getField( 'image.url', null );
 		$caption = strip_tags( $this->getField( 'caption' ) );
 
-
 		return array(
 			'image'   => $image,
 			'caption' => $caption

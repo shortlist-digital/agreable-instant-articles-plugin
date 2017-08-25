@@ -36,14 +36,26 @@ class PostObject extends \ArrayObject {
 	 * @return mixed|null
 	 */
 	public function __get( $name ) {
-		if ( isset( $this->{'post_' . $name} ) ) {
-			return $this->{'post_' . $name};
-		}
+		$this->{$name} = get_field( $name, $this->post_id );
 
+		return $this->{$name};
+	}
+
+	/**
+	 * @param $name
+	 * @param array $arguments
+	 *
+	 * @return mixed|null|void
+	 */
+	public function __call( $name, $arguments = [] ) {
 		return get_field( $name, $this->post_id );
 	}
 
 	public function getField( $path ) {
 		ArrayHelper::getValueByPath( $this, $path, null );
+	}
+
+	public function __isset( $name ) {
+		return isset( $this->{$name} );
 	}
 }

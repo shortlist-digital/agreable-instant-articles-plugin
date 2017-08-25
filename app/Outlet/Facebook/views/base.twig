@@ -9,23 +9,22 @@
     <meta property="op:markup_version" content="v1.0">
     <meta property="fb:article_style" content="default">
     <meta property="fb:use_automatic_ad_placement" content="true">
-    <meta property="og:title" content="{{ post.short_headline }}">
-    <meta property="og:description" content="{{ post.sell }}">
-    <meta property="og:image" content="{{ metadata.share_image }}">
     <link rel="canonical" href="{{ canonical_url }}">
 </head>
 <body>
 <article>
     <header>
-        <figure>
+        {#<figure>
             <img src="{{ post.hero_images[0]['sizes']['landscape'] }}"/>
-        </figure>
+            <figcaption>This image is amazing</figcaption>
+        </figure>#}
+        <h1>{{ post.short_headline }}</h1>
+        <h2>{{ post.sell }}</h2>
         {% if category %}
             <h3 class="op-kicker">
                 {{ category.name }}
             </h3>
         {% endif %}
-        <h1>{{ post.short_headline }}</h1>
         <address>
             {{ post.author.display_name }}
         </address>

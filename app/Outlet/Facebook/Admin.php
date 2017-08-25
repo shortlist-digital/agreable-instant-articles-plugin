@@ -6,8 +6,10 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 use AgreableInstantArticlesPlugin\AdminInterface;
 use AgreableInstantArticlesPlugin\ApiInterface;
+use AgreableInstantArticlesPlugin\Helper;
 use AgreableInstantArticlesPlugin\OutletInterface;
 use Croissant\Helper\ArrayHelper;
+use Facebook\InstantArticles\Elements\InstantArticle;
 
 /**
  * Class Admin
@@ -48,17 +50,17 @@ class Admin implements AdminInterface {
 	private $outlet;
 
 	/**
-	 *
+	 * DEBUGGING
 	 */
 	const WILL_UPDATE = 'WILL_UPDATE';
 
 	/**
-	 *
+	 * DEBUGGING
 	 */
 	const WILL_DELETE = 'WILL_DELETE';
 
 	/**
-	 *
+	 * DEBUGGING
 	 */
 	const WILL_CREATE = 'WILL_CREATE';
 
@@ -108,27 +110,37 @@ class Admin implements AdminInterface {
 		if ( $isActive && get_post_status( $this->post_id ) === self::ACTIVE_STATUS ) {
 
 			$insta = $this->getInstantArticle();
-			$hash  = md5( $insta );
-			$res   = false;
-			if ( ! $wasActive ) {
-				$res = $this->api->add( $this->post_id, $insta );
-				$this->setField( 'active', $res );
-				//updates only if hash different
-			} elseif ( $this->getField( 'last_update_hash' ) !== $hash ) {
+
+			$hash      = md5( serialize( $insta ) );
+			$last_hash = $this->getField( 'last_update_hash' );
+			$res       = false;
+
+			if ( $last_hash !== $hash ) {
+
+				Helper::set_notification( self::WILL_UPDATE );
 				$res = $this->api->update( $this->post_id, $insta );
+
+				if ( $res !== false ) {
+					$this->setField( 'last_update_hash', $hash );
+				} else {
+					Helper::set_notification( 'There was problem while updating instant articles' );
+				}
+
+			} else {
+				Helper::set_notification( 'not updating due to this same hash' );
 			}
 
-			$this->setField( 'last_update_hash', $hash );
-
 			return $res;
+
+		} else {
+			Helper::set_notification( self::WILL_DELETE );
+			//$this->api->delete( $this->post_id );
 		}
 
-
-		$this->api->delete( $this->post_id );
 	}
 
 	public function printStats() {
-		$this->getGenerator()->get();
+
 		$gen_stats = $this->getGenerator()->getStats( $this->key );
 		$api_stats = $this->api->getStats( $this->post_id );
 
@@ -171,7 +183,7 @@ class Admin implements AdminInterface {
 	}
 
 	/**
-	 * @return string
+	 * @return InstantArticle
 	 */
 	public function getInstantArticle() {
 
@@ -191,7 +203,7 @@ class Admin implements AdminInterface {
 	 */
 	public function isActive() {
 
-		return (bool) $this->getField( 'checkbox' ) && $this->getField( 'checkbox_active' );
+		return (bool) $this->getField( 'sync' );
 	}
 
 	/**
@@ -199,7 +211,8 @@ class Admin implements AdminInterface {
 	 */
 	public function updateCheckbox() {
 		$val = ArrayHelper::getValueByPath( $_REQUEST, 'sharing_center.' . $this->key, 0 );
-		$this->setField( 'checkbox', $val );
+
+		$this->setField( 'sync', $val );
 
 		return (bool) $val;
 	}

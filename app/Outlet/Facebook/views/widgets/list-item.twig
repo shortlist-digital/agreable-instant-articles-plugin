@@ -1,11 +1,18 @@
-<figure>
-    <h1>{{ heading }}</h1>
-    {% if image %}
+{% if image %}
+    <figure>
         <img src="{{ image }}"/>
-    {% endif %}
-    {% if caption %}
-        <figcaption class="op-vertical-below">
-            <h1>{{ caption }}</h1>
-        </figcaption>
-    {% endif %}
-</figure>
+        {% if caption %}
+            <figcaption class="op-vertical-below">
+                <h1>{{ heading }}</h1>
+                {{ caption }}
+            </figcaption>
+        {% endif %}
+    </figure>
+{% elseif caption %}
+    <p>
+        {{ heading }}
+    </p>
+    <p>
+        {{ caption }}
+    </p>
+{% endif %}

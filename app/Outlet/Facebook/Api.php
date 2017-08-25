@@ -68,6 +68,7 @@ class Api implements ApiInterface {
 		$this->userToken = $userToken;
 		$this->uniqueKey = implode( '_', [ 'ia', $appID, $pageID, $developmentMode ? 'dev' : 'prod' ] );
 		$accessToken     = $this->getPageAccessToken( $pageID );
+
 		$this->client    = Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
 
 	}
@@ -79,26 +80,11 @@ class Api implements ApiInterface {
 	 * @return bool Outlet id of element
 	 */
 	public function update( $post_id, $content ) {
-		if ( $this->getActive( $post_id ) ) {
-			$hash = $this->getLastUpdatedHash( $post_id );
-			if ( $hash ) {
-				$newHash = md5( $content->render() );
-				if ( $newHash === $hash ) {
-					return true;
-				}
-			}
-		}
-		$id = $this->client->importArticle( $content, ( WP_ENV === 'production' ) );
-		if ( $id ) {
-			$this->setLastUpdatedHash( $post_id, md5( $content->render() ) );
-			$this->setSubmissionId( $post_id, $id );
-			$this->setActive( $post_id, true );
-			$this->setSubmissionStatus( $post_id, true );
 
-			return true;
-		}
+		$resp = $this->client->importArticle( $content, ( WP_ENV === 'production' ) );
+		$this->setSubmissionId( $post_id, $resp );
 
-		return false;
+		return $resp;
 	}
 
 	/**
@@ -114,15 +100,19 @@ class Api implements ApiInterface {
 		 * Do a cleanup
 		 */
 		$this->setSubmissionStatus( $post_id, null );
-		$this->setActive( $post_id, null );
 		$this->setSubmissionId( $post_id, null );
 
 
 	}
 
+	/**
+	 * @param $id
+	 *
+	 * @return mixed|void
+	 */
 	public function getPageAccessToken( $id ) {
 
-		$accessToken = $this->getOption( 'page_access_token_' . $id );
+		$accessToken = false;//$this->getOption( 'page_access_token_' . $id );
 
 		if ( ! $accessToken ) {
 			$helper = Helper::create(
@@ -139,8 +129,9 @@ class Api implements ApiInterface {
 				$sId = $page->getField( 'id' );
 				if ( $sId == $id ) {
 					$accessToken = $page->getField( 'access_token' );
+
 				}
-				$this->setPageAccessToken( $page->getField( 'id' ), $page->getField( 'access_token' ) );
+				//$this->setPageAccessToken( $page->getField( 'id' ), $page->getField( 'access_token' ) );
 			}
 
 		}
@@ -148,14 +139,30 @@ class Api implements ApiInterface {
 		return $accessToken;
 	}
 
+	/**
+	 * @param $id
+	 * @param $val
+	 */
 	public function setPageAccessToken( $id, $val ) {
 		$this->setOption( 'page_access_token_' . $id, $val );
 	}
 
+	/**
+	 * @param $name
+	 * @param bool $def
+	 *
+	 * @return mixed|void
+	 */
 	public function getOption( $name, $def = false ) {
 		return get_option( $this->uniqueKey . '_' . $name, $def );
 	}
 
+	/**
+	 * @param $name
+	 * @param $val
+	 *
+	 * @return bool
+	 */
 	public function setOption( $name, $val ) {
 		return update_option( $this->uniqueKey . '_' . $name, $val );
 	}
@@ -165,10 +172,6 @@ class Api implements ApiInterface {
 	 */
 	public function getStatus( $post_id ) {
 
-
-		if ( ! $this->getActive( $post_id ) ) {
-			return self::STATUS_OFFLINE;
-		}
 
 		$submission_status = $this->getSubmissionStatus( $post_id );
 
@@ -259,29 +262,22 @@ class Api implements ApiInterface {
 		return $this->setField( $post_id, 'submission_status', $value );
 	}
 
+
+	/**
+	 * @param $post_id
+	 * @param $hash
+	 *
+	 * @return bool|int
+	 */
+	public function setLastUpdatedHash( $post_id, $hash ) {
+		return $this->setField( $post_id, 'active', $hash );
+	}
+
 	/**
 	 * @param $post_id
 	 *
 	 * @return mixed
 	 */
-	public function getActive( $post_id ) {
-		return $this->getField( $post_id, 'active' );
-	}
-
-	/**
-	 * @param $post_id
-	 * @param $value
-	 *
-	 * @return bool|int
-	 */
-	public function setActive( $post_id, $value ) {
-		return $this->setField( $post_id, 'active', $value );
-	}
-
-	public function setLastUpdatedHash( $post_id, $hash ) {
-		return $this->setField( $post_id, 'active', $hash );
-	}
-
 	public function getLastUpdatedHash( $post_id ) {
 		return $this->getField( $post_id, 'active' );
 	}
@@ -321,7 +317,6 @@ class Api implements ApiInterface {
 	 */
 	public function getStats( $post_id ) {
 		return [
-			'active'            => $this->getActive( $post_id ),
 			'status'            => $this->getStatus( $post_id ),
 			'submission_id'     => $this->getSubmissionId( $post_id ),
 			'submission_status' => $this->getSubmissionStatus( $post_id ),

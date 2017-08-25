@@ -60,9 +60,16 @@ add_filter( 'single_template', function () {
 	 * @var $outlet OutletInterface
 	 */
 	switch ( $action ) {
-		case ( 'generate' ):
+		case ( 'generate-before' ):
+			$html = (string) $outlet->createGenerator( get_the_ID() )->prerender();
+			include __DIR__ . '/views/viewer.php';
 
-			$html = (string) $outlet->createGenerator( get_the_ID() )->render();
+			break;
+		case ( 'generate' ):
+			$generator = $outlet->createGenerator( get_the_ID() );
+			$html      = (string) $generator->render();
+			$errors    = $generator->getWarnings();
+			$pre       = $generator->getHtml();
 			include __DIR__ . '/views/viewer.php';
 
 			break;
@@ -74,5 +81,5 @@ add_filter( 'single_template', function () {
 	}
 
 
-	exit( );
+	exit();
 }, 0, 0 );

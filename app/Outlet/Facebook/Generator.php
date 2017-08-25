@@ -17,7 +17,7 @@ use Croissant\App;
 use Croissant\DI\Interfaces\InstantArticlesLogger;
 use Croissant\DI\Interfaces\Paths;
 use Facebook\InstantArticles\Elements\InstantArticle;
-use Facebook\InstantArticles\Parser\Parser;
+use Facebook\InstantArticles\Transformer\Transformer;
 
 
 /**
@@ -64,7 +64,15 @@ class Generator implements GeneratorInterface {
 	 */
 	private $_logger;
 
+	/**
+	 * @var
+	 */
 	private static $logFile;
+
+	/**
+	 * @var
+	 */
+	private $transformer;
 
 	/**
 	 * Generator constructor.
@@ -79,23 +87,27 @@ class Generator implements GeneratorInterface {
 
 	}
 
+	public function getHtml() {
+		$widgetsHtml = implode( PHP_EOL, $this->getWidgetsHtmlOutputs() );
+
+		return new Wrap( [ 'content' => $widgetsHtml ], $this->post_id );
+	}
+
 	/**
 	 * @return InstantArticle
 	 */
 	public function get() {
 
-		$widgetsHtml = implode( PHP_EOL, $this->getWidgetsHtmlOutputs() );
+		$html = $this->getHtml();
 
-		$wrap = new Wrap( [ 'content' => $widgetsHtml ], $this->post_id );
-
-		return $this->parse( (string) $wrap );
+		return $this->parse( (string) $html );
 	}
 
 	/**
 	 * @return string
 	 */
 	public function render() {
-		return $this->get()->render();
+		return $this->get()->render( '', true );
 	}
 
 	/**
@@ -163,7 +175,10 @@ class Generator implements GeneratorInterface {
 
 				throw new GeneratorException( 'It seems like ' . var_export( $widgetClass, true ) . ' is not valid widget generator for ' . $acf_key );
 			}
+			//$widgetStrings[] = '<!--MISSING WIDGET ' . $acf_key . '--->';
+
 			$this->stats['missing_names'][] = $acf_key;
+
 		}
 
 		/**
@@ -179,20 +194,28 @@ class Generator implements GeneratorInterface {
 	 * @return array
 	 */
 	public function getStats( $uKey ) {
+		$this->get();
 		$this->stats['missing_names'] = array_unique( $this->stats['missing_names'] );
 		$this->stats['all']           = count( $this->getWidgetsData() );
 		$this->stats['rendered']      = count( $this->getWidgetsHtmlOutputs() );
 		$this->stats['missing']       = $this->stats['all'] - $this->stats['missing'];
-		$this->stats['link']          = implode( '/', [
-			Helper::reverseLinkReplacement( get_permalink() ),
-			'sharing_center',
-			$uKey,
-			'generate'
-		] );
+		$this->stats['warnings']      = array_map( function ( $i ) {
+			return get_class( $i );
+		}, $this->getWarnings() );
+		$this->stats['generator']     = '<a target="_blank" href="' . implode( '/', [
+				Helper::reverseLinkReplacement( get_permalink() ),
+				'sharing_center',
+				$uKey,
+				'generate'
+			] ) . '">template</a>';
+
 
 		return $this->stats;
 	}
 
+	public function getWarnings() {
+		return $this->getTransformer()->getWarnings();
+	}
 
 	/**
 	 * @param $html
@@ -200,13 +223,34 @@ class Generator implements GeneratorInterface {
 	 * @return InstantArticle
 	 */
 	private function parse( $html ) {
-		$this->silenceLogger();
-		$parser = new Parser();
-		$html   = $parser->parse( $html );
 
-		return $html;
+		libxml_use_internal_errors( true );
+		$document = new \DOMDocument();
+		$document->loadHTML( $html );
+		libxml_use_internal_errors( false );
+
+		$this->silenceLogger();
+
+		$instant_article = $this->getTransformer()->transform( InstantArticle::create(), $document );
+
+		return $instant_article;
 	}
 
+	/**
+	 * @return Transformer
+	 */
+	public function getTransformer() {
+		if ( ! $this->transformer ) {
+			$this->transformer = new Transformer();
+			$this->transformer->loadRules( file_get_contents( __DIR__ . '/simple-rules.json' ) );
+		}
+
+		return $this->transformer;
+	}
+
+	/**
+	 *
+	 */
 	public function silenceLogger() {
 		/**
 		 * @var $logger \Logger
@@ -215,7 +259,7 @@ class Generator implements GeneratorInterface {
 		file_put_contents( $file, '' );
 		\Logger::configure( array(
 			'rootLogger' => array(
-				'level'     => 'WARN',
+				'level'     => 'ALL',
 				'appenders' => array( 'default' ),
 			),
 			'appenders'  => array(
@@ -235,14 +279,20 @@ class Generator implements GeneratorInterface {
 		$logger->removeAllAppenders();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLoggerOutput() {
 		return trim( file_get_contents( $this->getLogFile() ) );
 
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLogFile() {
 		if ( ! self::$logFile ) {
-			self::$logFile = App::get( Paths::class )->getLogsPath() . '/fb_generator.log';
+			self::$logFile = App::get( Paths::class )->getLogsPath() . 'fb_generator.log';
 		}
 
 		return self::$logFile;
