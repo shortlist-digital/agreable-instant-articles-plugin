@@ -31,7 +31,7 @@ Clearfix
 
 /*noinspection ALL*/
 .sharing_center_box_label {
-    font-weight: bold;
+
     padding: 20px 0;
     line-height: 15px;
 }
@@ -46,15 +46,20 @@ Clearfix
     transition: min-width .4s cubic-bezier(.19, 1, .22, 1) .4s, background .4s cubic-bezier(.19, 1, .22, 1);
     height: 50px;
     padding: 10px;
+    color: white;
     border-radius: 25px;
-    background: #FFDA91;
+    background: #FF8174;
     position: relative;
     text-align: left;
 }
 
 .sharing_center_box input:checked + .dashicons {
-    background: #4CD964;
+    background: #FFDA91;
 
+}
+
+.sharing_center_box .sharing_center_label-published input:checked + .dashicons {
+    background: #4CD964;
 }
 
 .sharing_center_box .dashicons:before {
@@ -93,4 +98,30 @@ Clearfix
 .sharing_center_debug_box {
     width: 33.333333333333333%;
     float: left;
+}
+
+.sharing_center_colordot {
+
+}
+
+.sharing_center_colordot:before {
+    background: black;
+    content: " ";
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.sharing_center_colordot-red:before {
+    background: #FF8174;
+}
+
+.sharing_center_colordot-yellow:before {
+    background: #FFDA91;
+}
+
+.sharing_center_colordot-green:before {
+    background: #4CD964;
 }

@@ -7,6 +7,7 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 use AgreableInstantArticlesPlugin\Exceptions\GeneratorException;
 use AgreableInstantArticlesPlugin\GeneratorInterface;
 use AgreableInstantArticlesPlugin\Helper;
+use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Heading;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Html;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\Image;
 use AgreableInstantArticlesPlugin\Outlet\Facebook\Transforms\ListItem;
@@ -29,12 +30,13 @@ use Facebook\InstantArticles\Transformer\Transformer;
  *
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook
  */
-class Generator implements GeneratorInterface {
+class Generator {
 
 	/**
 	 *
 	 */
 	const ACF_LAYOUT_KEY = 'acf_fc_layout';
+	const ACF_HIDE_KEY = 'hide_widget_from_page';
 	/**
 	 * @var int
 	 */
@@ -123,7 +125,8 @@ class Generator implements GeneratorInterface {
 			'image'      => Image::class,
 			'list-item'  => ListItem::class,
 			'paragraph'  => Paragraph::class,
-			'pull-quote' => PullQuote::class
+			'pull-quote' => PullQuote::class,
+			'heading'    => Heading::class
 		];
 
 		/**
@@ -151,7 +154,12 @@ class Generator implements GeneratorInterface {
 
 		$widgetStrings = [];
 		foreach ( $widgetsData as $index => $widgetData ) {
-
+			/**
+			 * Skip if hidden
+			 */
+			if ( $widgetData[ self::ACF_HIDE_KEY ] ) {
+				continue;
+			}
 			$acf_key = $widgetData[ self::ACF_LAYOUT_KEY ];
 
 			if ( isset( $widgetList[ $acf_key ] ) ) {

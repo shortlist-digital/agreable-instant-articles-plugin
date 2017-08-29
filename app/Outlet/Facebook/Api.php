@@ -4,8 +4,8 @@
 namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 
-use AgreableInstantArticlesPlugin\ApiInterface;
 use Facebook\Authentication\AccessToken;
+use Facebook\Facebook;
 use Facebook\GraphNodes\GraphNode;
 use Facebook\InstantArticles\Client\Client;
 use Facebook\InstantArticles\Client\Helper;
@@ -17,59 +17,65 @@ use Facebook\InstantArticles\Elements\InstantArticle;
  *
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook
  */
-class Api implements ApiInterface {
+class Api {
+
+	const SUBMISSION_ID_FIELD_KEY = 'submission_id';
+
 	/**
 	 * @var Client
 	 */
-	private $client;
+	private $instaClient;
+
 	/**
 	 * @var int
 	 */
 	private $appId;
+
 	/**
 	 * @var string
 	 */
 	private $appSecret;
+
 	/**
 	 * @var string
 	 */
 	private $userToken;
+
 	/**
 	 * @var string created from app id/page_id/mode everything else can be changed
 	 */
 	private $uniqueKey;
 
 	/**
-	 *
+	 * @var Facebook
 	 */
-	const STATUS_PENDING = 'PENDING';
-
-	/**
-	 *
-	 */
-	const STATUS_SUCCESS = 'SUCCESS';
-	/**
-	 *
-	 */
-	const STATUS_OFFLINE = 'OFFLINE';
+	private $fbClient;
 
 	/**
 	 * Api constructor.
 	 *
-	 * @param $appID int
+	 * @param $appID string
 	 * @param $appSecret string
 	 * @param $userToken string
-	 * @param $pageID int
+	 * @param $pageID string
 	 * @param $developmentMode
 	 */
-	public function __construct( $appID, $appSecret, $userToken, $pageID, $developmentMode ) {
+	public function __construct( string $appID, string $appSecret, string $userToken, string $pageID, bool $developmentMode ) {
+
 		$this->appId     = $appID;
 		$this->appSecret = $appSecret;
 		$this->userToken = $userToken;
 		$this->uniqueKey = implode( '_', [ 'ia', $appID, $pageID, $developmentMode ? 'dev' : 'prod' ] );
 		$accessToken     = $this->getPageAccessToken( $pageID );
-		exit($developmentMode);
-		$this->client = Client::create( $appID, $appSecret, $accessToken, $pageID, $developmentMode );
+
+		$this->fbClient = new Facebook( [
+			'app_id'                => $appID,
+			'app_secret'            => $appSecret,
+			'default_access_token'  => $accessToken,
+			'default_graph_version' => 'v2.5'
+		] );
+
+		$this->instaClient = new Client( $this->fbClient, $pageID, $developmentMode );
 
 	}
 
@@ -81,8 +87,10 @@ class Api implements ApiInterface {
 	 */
 	public function update( int $post_id, $content ): string {
 
-		$resp = $this->client->importArticle( $content, ( WP_ENV === 'production' ), true, true );
+		$resp = $this->instaClient->importArticle( $content, ( WP_ENV === 'production' ), true, true );
+
 		$this->setSubmissionId( $post_id, $resp );
+		$this->setSubmissionStatus( $post_id, null );
 
 		return $resp;
 	}
@@ -94,7 +102,7 @@ class Api implements ApiInterface {
 	 */
 	public function delete( int $post_id ): string {
 
-		$this->client->removeArticle( get_permalink( $post_id ) )->getStatus();
+		$this->instaClient->removeArticle( get_permalink( $post_id ) )->getStatus();
 
 		/**
 		 * Do a cleanup
@@ -132,7 +140,7 @@ class Api implements ApiInterface {
 					$accessToken = $page->getField( 'access_token' );
 
 				}
-				//$this->setPageAccessToken( $page->getField( 'id' ), $page->getField( 'access_token' ) );
+
 			}
 
 		}
@@ -147,7 +155,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return mixed
 	 */
-	public function getOption( $name, $def = false ) {
+	public function getOption( string $name, $def = false ) {
 		return get_option( $this->uniqueKey . '_' . $name, $def );
 	}
 
@@ -157,7 +165,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return bool
 	 */
-	public function setOption( $name, $val ) {
+	public function setOption( string $name, $val ): bool {
 		return update_option( $this->uniqueKey . '_' . $name, $val );
 	}
 
@@ -168,20 +176,26 @@ class Api implements ApiInterface {
 	 */
 	public function getStatus( int $post_id ): string {
 
-
+		/**
+		 * If we got it before and there was no change it should be this same as last one.
+		 */
 		$submission_status = $this->getSubmissionStatus( $post_id );
 
 		if ( $submission_status === InstantArticleStatus::SUCCESS ) {
-			return self::STATUS_SUCCESS;
+			return Outlet::STATUS_PUBLISHED;
 		}
 
 		$submission_status = $this->getSubmissionStatus( $post_id, true );
 
-		if ( $submission_status === InstantArticleStatus::SUCCESS ) {
-			return self::STATUS_SUCCESS;
+		switch ( $submission_status ) {
+			case( InstantArticleStatus::SUCCESS ):
+				return Outlet::STATUS_PUBLISHED;
+			case( InstantArticleStatus::IN_PROGRESS ):
+				return Outlet::STATUS_PENDING;
+
 		}
 
-		return self::STATUS_PENDING;
+		return Outlet::STATUS_FAILED;
 	}
 
 	/**
@@ -189,13 +203,13 @@ class Api implements ApiInterface {
 	 *
 	 * @return int
 	 */
-	public function getSubmissionId( $post_id ) {
+	public function getSubmissionId( int $post_id ) {
 
 		$submission_id = $this->getField( $post_id, 'submission_id' );
 		if ( ! $submission_id ) {
-			$submission_id = $this->client->getArticleIDFromCanonicalURL( get_permalink( $post_id ) );
-			if ( $submission_id ) {
-				$this->setSubmissionId( $post_id, $submission_id );
+			$submission_id = $this->instaClient->getArticleIDFromCanonicalURL( get_permalink( $post_id ) );
+			if ( is_null( $submission_id ) ) {
+				return false;
 			}
 		}
 
@@ -209,7 +223,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return mixed|string
 	 */
-	public function getSubmissionStatus( $post_id, $force = false ) {
+	public function getSubmissionStatus( int $post_id, $force = false ): string {
 
 		if ( ! $force ) {
 			$submission_status = $this->getField( $post_id, 'submission_status' );
@@ -225,9 +239,9 @@ class Api implements ApiInterface {
 			return InstantArticleStatus::NOT_FOUND;
 		}
 
-		$submission_status = $this->client->getSubmissionStatus( $submission_id )->getStatus();
+		$submission_status = $this->instaClient->getSubmissionStatus( $submission_id )->getStatus();
 
-		if ( $submission_status ) {
+		if ( $submission_status === InstantArticleStatus::SUCCESS ) {
 
 			$this->setSubmissionStatus( $post_id, $submission_status );
 
@@ -243,7 +257,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return bool|int
 	 */
-	public function setSubmissionId( $post_id, $value ) {
+	public function setSubmissionId( int $post_id, $value ): bool {
 		return $this->setField( $post_id, 'submission_id', $value );
 	}
 
@@ -254,7 +268,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return bool|int
 	 */
-	public function setSubmissionStatus( $post_id, $value ) {
+	public function setSubmissionStatus( int $post_id, $value ): bool {
 		return $this->setField( $post_id, 'submission_status', $value );
 	}
 
@@ -265,8 +279,8 @@ class Api implements ApiInterface {
 	 *
 	 * @return bool|int
 	 */
-	public function setLastUpdatedHash( $post_id, $hash ) {
-		return $this->setField( $post_id, 'active', $hash );
+	public function setLastUpdatedHash( int $post_id, $hash ): bool {
+		return $this->setField( $post_id, 'last_update_hash', $hash );
 	}
 
 	/**
@@ -274,8 +288,8 @@ class Api implements ApiInterface {
 	 *
 	 * @return mixed
 	 */
-	public function getLastUpdatedHash( $post_id ) {
-		return $this->getField( $post_id, 'active' );
+	public function getLastUpdatedHash( int $post_id ): string {
+		return $this->getField( $post_id, 'last_update_hash' );
 	}
 
 	/**
@@ -292,7 +306,7 @@ class Api implements ApiInterface {
 	 *
 	 * @return bool|int
 	 */
-	private function setField( $post_id, $name, $value = null ) {
+	private function setField( int $post_id, $name, $value = null ): bool {
 		return update_post_meta( $post_id, $this->uniqueKey . '_' . $name, $value );
 	}
 
@@ -302,8 +316,22 @@ class Api implements ApiInterface {
 	 *
 	 * @return mixed
 	 */
-	private function getField( $post_id, $name ) {
+	private function getField( int $post_id, $name ) {
 		return get_post_meta( $post_id, $this->uniqueKey . '_' . $name, true );
+	}
+
+	private function getErrors( int $post_id ): array {
+		$res    = $this->fbClient->get( $this->getSubmissionId( $post_id ) . '?fields=errors' )->getDecodedBody();
+		$errors = [];
+		if ( ! isset( $res['errors'] ) || ! is_array( $res ) ) {
+			return [];
+		}
+		$res = $res['errors'];
+		foreach ( $res as $index => $re ) {
+			$errors[] = $re['message'];
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -311,12 +339,13 @@ class Api implements ApiInterface {
 	 *
 	 * @return array
 	 */
-	public function getStats( $post_id ) {
+	public function getStats( int $post_id ): array {
 		return [
-			'status'            => $this->getStatus( $post_id ),
-			'submission_id'     => $this->getSubmissionId( $post_id ),
-			'submission_status' => $this->getSubmissionStatus( $post_id ),
-			'hash'              => $this->getLastUpdatedHash( $post_id )
+			'status'          => $this->getStatus( $post_id ),
+			'submission_id'   => $this->getSubmissionId( $post_id ),
+			'facebook_status' => $this->getSubmissionStatus( $post_id ),
+			'hash'            => $this->getLastUpdatedHash( $post_id ),
+			'warnings'        => $this->getErrors( $post_id )
 		];
 	}
 

@@ -12,6 +12,7 @@ use Facebook\InstantArticles\Elements\InstantArticle;
 /**
  * Class PostManager
  * Post manager is responsible for all the post related actions Like saving post fields etc.
+ *
  * @package AgreableInstantArticlesPlugin\Outlet\Facebook
  */
 class PostManager {
@@ -54,15 +55,13 @@ class PostManager {
 	 * @param $name
 	 * @param null $post_id
 	 */
-	public function __construct( OutletInterface $outlet, $post_id = null ) {
+	public function __construct( Outlet $outlet, int $post_id ) {
 
-		$this->api    = $outlet->getApi();
-		$this->key    = $this->api->getUniqueKey();
-		$this->outlet = $outlet;
+		$this->api     = $outlet->getApi();
+		$this->key     = $outlet->getUniqueKey();
+		$this->outlet  = $outlet;
+		$this->post_id = $post_id;
 
-		if ( $post_id === null ) {
-			$this->post_id = get_the_ID();
-		}
 	}
 
 
@@ -72,10 +71,10 @@ class PostManager {
 	 * @return bool
 	 */
 	public function handleChange() {
-		$action    = null;
-		$wasActive = $this->isSyncActive();
-		$isActive  = $wasActive;
-		if ( $this->isAdminRequest() ) {
+
+		$isActive = $this->isSyncActive();
+
+		if ( self::isAdminRequest() ) {
 			$isActive = $this->updateCheckbox();
 		}
 
@@ -89,24 +88,22 @@ class PostManager {
 
 			if ( $last_hash !== $hash ) {
 
-				Helper::set_notification( self::WILL_UPDATE );
 				$res = $this->api->update( $this->post_id, $instant );
 
 				if ( $res !== false ) {
+
 					$this->setField( 'last_update_hash', $hash );
 				} else {
-					Helper::set_notification( 'There was problem while updating instant articles' );
+
+					Helper::set_notification( 'There was problem while updating instant articles. Please contact developer' );
 				}
 
-			} else {
-				Helper::set_notification( 'not updating due to this same hash' );
 			}
 
 			return $res;
 
 		} else {
-			Helper::set_notification( self::WILL_DELETE );
-			//$this->api->delete( $this->post_id );
+			$this->api->delete( $this->post_id );
 		}
 
 		return true;
@@ -120,21 +117,25 @@ class PostManager {
 		$gen_stats = $this->getGenerator()->getStats( $this->key );
 		$api_stats = $this->api->getStats( $this->post_id );
 
-		$rows = [ '<span>Generator</span>' ];
+		$rows = [ '<h4 style="margin-bottom:0;padding-bottom:0;">Generator</h4>' ];
 
 		foreach ( $gen_stats as $index => $gen_stat ) {
 			if ( is_array( $gen_stat ) || is_object( $gen_stat ) ) {
-				$rows[] = "<span>$index: " . json_encode( $gen_stat ) . "</span>";
+				$rows[] = "<span><b>$index</b>: " . json_encode( $gen_stat ) . "</span>";
 			} else {
-				$rows[] = "<span>$index: $gen_stat</span>";
+				$rows[] = "<span><b>$index</b>: $gen_stat</span>";
 			}
 
 		}
 
-		$rows[] = '<span>Api</span>';
+		$rows[] = '<h4 style="margin-bottom:0;padding-bottom:0;">Api</h4>';
 
 		foreach ( $api_stats as $index => $gen_stat ) {
-			$rows[] = "<span>$index: $gen_stat</span>";
+			if ( is_array( $gen_stat ) || is_object( $gen_stat ) ) {
+				$rows[] = "<span><b>$index</b>: " . json_encode( $gen_stat ) . "</span>";
+			} else {
+				$rows[] = "<span><b>$index</b>: $gen_stat</span>";
+			}
 		}
 
 		return implode( '<br>' . PHP_EOL, $rows );
@@ -163,7 +164,7 @@ class PostManager {
 	/**
 	 * @return bool
 	 */
-	private function isAdminRequest() {
+	static public function isAdminRequest() {
 		return isset( $_REQUEST, $_REQUEST['sharing_center_editor'] ) && $_REQUEST['sharing_center_editor'] == 1;
 	}
 

@@ -14,7 +14,7 @@ abstract class Outlet implements OutletInterface {
 	/**
 	 * Article is visible to Shortlist viewers
 	 */
-	const STATUS_LIVE = 'live';
+	const STATUS_PUBLISHED = 'published';
 	/**
 	 *  Article is pending due to internal or external review in outside app
 	 */
