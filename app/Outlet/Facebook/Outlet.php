@@ -6,6 +6,8 @@ namespace AgreableInstantArticlesPlugin\Outlet\Facebook;
 
 use AgreableInstantArticlesPlugin\ApiInterface;
 use AgreableInstantArticlesPlugin\GeneratorInterface;
+use Croissant\App;
+use Croissant\DI\Interfaces\InstantArticlesLogger;
 
 /**
  * Class Outlet
@@ -26,6 +28,11 @@ class Outlet extends \AgreableInstantArticlesPlugin\Outlet {
 	 * @var array
 	 */
 	private $post_managers = [];
+
+	/**
+	 * @var InstantArticlesLogger
+	 */
+	private $logger;
 
 	/**
 	 * Outlet constructor.
@@ -88,8 +95,27 @@ class Outlet extends \AgreableInstantArticlesPlugin\Outlet {
 	 * @inheritdoc
 	 */
 	public function handleChange( int $post_id ): bool {
+		/**
+		 * Silence errors and
+		 */
+		try {
+			return $this->getPostManager( $post_id )->handleChange();
+		} catch ( \Throwable $e ) {
+			$this->getLogger()->error( $e->getMessage(), [ $e ] );
 
-		return $this->getPostManager( $post_id )->handleChange();
+			return false;
+		}
+	}
+
+	/**
+	 * @return InstantArticlesLogger
+	 */
+	public function getLogger() {
+		if ( ! $this->logger ) {
+			$this->logger = App::get( InstantArticlesLogger::class );
+		}
+
+		return $this->logger;
 	}
 
 	/**

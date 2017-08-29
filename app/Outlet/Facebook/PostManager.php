@@ -81,7 +81,10 @@ class PostManager {
 		if ( $isActive && get_post_status( $this->post_id ) === self::ACTIVE_STATUS ) {
 
 			$instant = $this->getInstantArticle();
-
+			$errors  = $this->getTransformerErrors();
+			if ( ! empty($errors) ) {
+				throw new \Exception( 'There were some issues when generating content for post id: ' . $this->post_id );
+			}
 			$hash      = md5( serialize( $instant ) );
 			$last_hash = $this->getField( 'last_update_hash' );
 			$res       = false;
@@ -150,6 +153,13 @@ class PostManager {
 		}
 
 		return $this->generator;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTransformerErrors() {
+		return $this->getGenerator()->getWarnings();
 	}
 
 	/**
