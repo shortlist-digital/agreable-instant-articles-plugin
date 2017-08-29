@@ -321,6 +321,11 @@ class Api {
 	}
 
 	private function getErrors( int $post_id ): array {
+		$submissionId = $this->getSubmissionId( $post_id );
+
+		if ( ! $submissionId ) {
+			return [];
+		}
 		$res    = $this->fbClient->get( $this->getSubmissionId( $post_id ) . '?fields=errors' )->getDecodedBody();
 		$errors = [];
 		if ( ! isset( $res['errors'] ) || ! is_array( $res ) ) {
