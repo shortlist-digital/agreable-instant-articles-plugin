@@ -102,7 +102,6 @@ class Outlet extends \AgreableInstantArticlesPlugin\Outlet {
 			return $this->getPostManager( $post_id )->handleChange();
 		} catch ( \Throwable $e ) {
 			$this->getLogger()->error( $e->getMessage(), [ $e ] );
-
 			return false;
 		}
 	}
