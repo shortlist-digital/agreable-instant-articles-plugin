@@ -1,0 +1,127 @@
+/**
+Clearfix
+ */
+
+/*noinspection ALL*/
+.sharing_center *, .sharing_center_debug {
+    box-sizing: border-box;
+}
+
+/*noinspection ALL*/
+.sharing_center:after, .sharing_center_debug:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/*noinspection ALL*/
+.sharing_center_box_label, .sharing_center_box {
+    float: left;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 33.333333333333333%;
+    overflow: hidden;
+    position: relative;
+}
+
+.sharing_center_box input {
+    margin-left: -30px;
+    position: absolute;
+}
+
+/*noinspection ALL*/
+.sharing_center_box_label {
+
+    padding: 20px 0;
+    line-height: 15px;
+}
+
+.sharing_center_box input:checked {
+
+}
+
+.sharing_center_box .dashicons {
+    display: block;
+    min-width: 50px;
+    transition: min-width .4s cubic-bezier(.19, 1, .22, 1) .4s, background .4s cubic-bezier(.19, 1, .22, 1);
+    height: 50px;
+    padding: 10px;
+    color: white;
+    border-radius: 25px;
+    background: #FF8174;
+    position: relative;
+    text-align: left;
+}
+
+.sharing_center_box input:checked + .dashicons {
+    background: #FFDA91;
+
+}
+
+.sharing_center_box .sharing_center_label-published input:checked + .dashicons {
+    background: #4CD964;
+}
+
+.sharing_center_box .dashicons:before {
+    margin-left: 2px;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.sharing_center_box:hover .dashicons {
+    min-width: 100%;
+    transition: min-width .4s cubic-bezier(.19, 1, .22, 1), background .4s cubic-bezier(.19, 1, .22, 1);
+}
+
+.sharing_center_box .dashicons::after {
+    content: attr(alt) " ";
+    font-size: 12px;
+    line-height: 15px;
+    text-align: left;
+    margin-top: -1px;
+    display: block;
+    left: 45px;
+    top: 50%;
+    position: absolute;
+    text-transform: uppercase;
+    transform: translate(0, -50%);
+    opacity: 0;
+    transition: opacity .4s cubic-bezier(.19, 1, .22, 1);
+}
+
+.sharing_center_box:hover .dashicons::after {
+    opacity: 1;
+    transition: opacity .4s cubic-bezier(.19, 1, .22, 1) .4s;
+}
+
+/*noinspection ALL*/
+.sharing_center_debug_box {
+    width: 33.333333333333333%;
+    float: left;
+}
+
+.sharing_center_colordot {
+
+}
+
+.sharing_center_colordot:before {
+    background: black;
+    content: " ";
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.sharing_center_colordot-red:before {
+    background: #FF8174;
+}
+
+.sharing_center_colordot-yellow:before {
+    background: #FFDA91;
+}
+
+.sharing_center_colordot-green:before {
+    background: #4CD964;
+}

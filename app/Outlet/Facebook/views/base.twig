@@ -1,0 +1,99 @@
+{% set metadata = {
+"share_title":       not post.share_title ? post.share_title : post.short_headline | default(wp_title | default(site.name)),
+"share_description": not post.share_description ? post.share_description : post.sell | default(site.description),
+"share_image":       post.getField('share_image.src') | default(post.getField('hero_images.[0].src')) | default(options.default_share_image.url),
+} %}
+
+<html lang="en" prefix="op: http://media.facebook.com/op#">
+<head>
+    <meta charset="utf-8">
+    <meta property="op:markup_version" content="v1.0">
+    <meta property="fb:article_style" content="default">
+    <meta property="fb:use_automatic_ad_placement" content="true">
+    <link rel="canonical" href="{{ canonical_url }}">
+</head>
+<body>
+<article>
+    <header>
+        {#<figure>
+            <img src="{{ post.hero_images[0]['sizes']['landscape'] }}"/>
+            <figcaption>This image is amazing</figcaption>
+        </figure>#}
+        <h1>{{ post.short_headline }}</h1>
+        <h2>{{ post.sell }}</h2>
+        {% if category %}
+            <h3 class="op-kicker">
+                {{ category.name }}
+            </h3>
+        {% endif %}
+        <address>
+            {{ post.author.display_name }}
+        </address>
+        <time class="op-published" dateTime="{{ post_date|date("d-M-Y") }}">
+            {{ post_date }}
+        </time>
+
+        <div class="op-ad-template">
+            <!-- Ads to be automatically placed throughout the article -->
+            {% for advert in adverts.body %}
+                {{ advert }}
+            {% endfor %}
+        </div>
+    </header>
+    <!-- Content -->
+    {{ content|raw }}
+    <!-- /Content -->
+    <footer>
+        <small>Copyright © 2010–{{ 'now' | date("Y") }} {{ name }}</small>
+    </footer>
+    <figure class="op-tracker">
+        <iframe>
+            {% if SEGMENT_WRITE_KEY %}
+                <script type="text/javascript">
+                    !function () {
+                        var analytics = window.analytics = window.analytics || [];
+                        if (!analytics.initialize) if (analytics.invoked) window.console && console.error && console.error("Segment snippet included twice."); else {
+                            analytics.invoked = !0;
+                            analytics.methods = ["trackSubmit", "trackClick", "trackLink", "trackForm", "pageview", "identify", "reset", "group", "track", "ready", "alias", "page", "once", "off", "on"];
+                            analytics.factory = function (t) {
+                                return function () {
+                                    var e = Array.prototype.slice.call(arguments);
+                                    e.unshift(t);
+                                    analytics.push(e);
+                                    return analytics
+                                }
+                            };
+                            for (var t = 0; t < analytics.methods.length; t++) {
+                                var e = analytics.methods[t];
+                                analytics[e] = analytics.factory(e)
+                            }
+                            analytics.load = function (t) {
+                                var e = document.createElement("script");
+                                e.type = "text/javascript";
+                                e.async = !0;
+                                e.src = ("https:" === document.location.protocol ? "https://" : "http://") + "cdn.segment.com/analytics.js/v1/" + t + "/analytics.min.js";
+                                var n = document.getElementsByTagName("script")[0];
+                                n.parentNode.insertBefore(e, n)
+                            };
+                            analytics.SNIPPET_VERSION = "3.1.0";
+                            analytics.load("{{ SEGMENT_WRITE_KEY }}");
+                            {% if instant_article %}
+                                analytics.identify({
+                                    Platform: 'FBInstantArticle'
+                                });
+                            {% endif %}
+                            analytics.page()
+                        }
+                    }();
+                </script>
+            {% else %}
+                <script type="text/javascript">
+                    console.warn('segment_write_key missing')
+                </script>
+            {% endif %}
+
+        </iframe>
+    </figure>
+</article>
+</body>
+</html>
