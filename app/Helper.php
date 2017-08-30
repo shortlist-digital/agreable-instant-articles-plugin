@@ -56,11 +56,10 @@ class Helper {
 	 */
 	public static function reverseLinkReplacement( $permalink ) {
 
-		$web_base_url = getenv( 'WEB_BASE_PROTOCOL' ) . getenv( 'WEB_BASE_DOMAIN' );
+		$web_base_url = getenv( 'WEB_BASE_URL' );
 
 		return rtrim( str_replace( rtrim( $web_base_url, '/' ), rtrim( getenv( 'WP_HOME' ), '/' ), $permalink ), '/' );
 	}
-
 
 	/**
 	 * registers hook
