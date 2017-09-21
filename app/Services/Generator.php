@@ -12,9 +12,8 @@ class Generator {
     $content_components = array_merge($content_components, self::get_header_components($post));
     $content_components = array_merge($content_components, self::get_content_components($post));
     $content_components = array_merge($content_components, self::get_footer_components($post));
-    foreach($content_components as $content_component) {
-      echo $content_component;
-    }
+
+    return implode( '', $content_components );
   }
 
   protected static function get_header_components(TimberPost $post) {
@@ -24,12 +23,14 @@ class Generator {
     $header_type = 'super-hero';
     $component_type = 'Partials';
     $generator_class = $header_directory . '/' . $header_type . '/generators/instant-articles/generator.php';
+
     if (file_exists($generator_class)) {
       include_once $generator_class;
       $class_name = self::get_class_name($header_type, $component_type);
       $generator = new $class_name();
       $components[] = $generator->get($post);
     }
+
     return $components;
   }
 
