@@ -17,6 +17,7 @@ class Hooks {
   public function create_or_update($post_id) {
     if (wp_is_post_revision( $post_id )) return;
     $post = new TimberPost($post_id);
+    if ($post->post_type !== 'post') return;
     if (property_exists($post, 'article_should_publish_to_instant_articles') && ($post->article_should_publish_to_instant_articles == 1)) {
       $post = new TimberPost($post_id);
       $save = new Save($post);
