@@ -104,5 +104,4 @@ class Helper {
             substr(self::asset($file), strlen(content_directory()))
         );
     }
-
 }
