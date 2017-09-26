@@ -22,8 +22,13 @@ class Generator
     protected static function get_header_components( TimberPost $post ) {
         $components = [];
 
-        $generator = GeneratorFactory::create( 'super-hero' );
-        $components[] = $generator->get($post);
+        $headerGenerator = GeneratorFactory::create( 'super-hero' );
+        $components[] = $headerGenerator->get($post);
+
+        if ($post->standfirst) {
+          $standFirstGenerator = GeneratorFactory::create( 'standfirst' );
+          $components[] = $standFirstGenerator->get($post);
+        }
 
         return $components;
     }
