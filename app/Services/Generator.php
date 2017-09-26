@@ -25,7 +25,8 @@ class Generator
         $headerGenerator = GeneratorFactory::create( 'super-hero' );
         $components[] = $headerGenerator->get($post);
 
-        if ($post->standfirst) {
+
+        if ($post->standfirst !== "") {
           $standFirstGenerator = GeneratorFactory::create( 'standfirst' );
           $components[] = $standFirstGenerator->get($post);
         }

@@ -15,6 +15,8 @@ class StandFirst implements GeneratorInterface
         __DIR__ . '/views/standfirst.twig',
             [ 'standfirst' => $standFirst ]
         );
+
+      return $html_as_string;
     }
 
 }
