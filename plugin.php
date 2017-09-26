@@ -21,7 +21,3 @@ if(file_exists(__DIR__ . '/vendor/getherbert/framework/bootstrap/autoload.php'))
 } else {
   require_once __DIR__ . '/../../../../vendor/getherbert/framework/bootstrap/autoload.php';
 }
-
-if (!getenv('FB_INSTANT_ARTICLES_DEVELOPMENT_MODE')) {
-  \Jigsaw::show_notice("<b>NOTICE</b>: FB_INSTANT_ARTICLES_DEVELOPMENT_MODE missing from .env", 'error');
-}

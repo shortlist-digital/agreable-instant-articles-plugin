@@ -12,8 +12,6 @@ return [
      * Auto-load all required files.
      */
     'requires' => [
-        // __DIR__ . '/app/customPostTypes.php',
-        // __DIR__ . '/app/Admin/post-columns.php',
         __DIR__ . '/app/Services/UsefulHooks.php',
         __DIR__ . '/app/custom-fields/metabox.php',
         __DIR__ . '/app/Admin/hooks.php'
