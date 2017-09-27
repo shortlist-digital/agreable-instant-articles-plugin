@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class Gallery implements GeneratorInterface
 {
@@ -12,7 +13,8 @@ class Gallery implements GeneratorInterface
         __DIR__ . '/views/gallery.twig',
         array(
           'images' => $images
-        )
+        ),
+        false, TimberLoader::CACHE_NONE
       );
       return $html_as_string;
     }

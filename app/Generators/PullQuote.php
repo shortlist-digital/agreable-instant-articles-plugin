@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class PullQuote implements GeneratorInterface
 {
@@ -10,7 +11,8 @@ class PullQuote implements GeneratorInterface
         $text = $widget['text'];
         $html_as_string = Timber::compile(
             __DIR__ . '/views/pull-quote.twig',
-            [ 'text' => $text ]
+            [ 'text' => $text ],
+            false, TimberLoader::CACHE_NONE
         );
 
         return $html_as_string;

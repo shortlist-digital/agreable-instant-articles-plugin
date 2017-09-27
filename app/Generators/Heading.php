@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class Heading implements GeneratorInterface
 {
@@ -13,7 +14,8 @@ class Heading implements GeneratorInterface
           __DIR__ . '/views/heading.twig',
           array(
             'text' => $text
-          )
+          ),
+          false, TimberLoader::CACHE_NONE
         );
         return $html_as_string;
     }
