@@ -2,39 +2,33 @@
 
 namespace AgreableInstantArticlesPlugin\Services;
 
-use Herbert\Framework\Models\Post;
-use \TimberPost;
-use \Exception;
-use \stdClass;
-
 class Generator
 {
-    public static function create_object( $post ) {
+    public function create_object( $post ) {
         $content_components = array_merge(
-            self::get_header_components($post),
-            self::get_content_components($post),
-            self::get_footer_components($post)
+            $this->get_header_components($post),
+            $this->get_content_components($post),
+            $this->get_footer_components($post)
         );
 
         return implode( '', $content_components );
     }
 
-    protected static function get_header_components( TimberPost $post ) {
+    private function get_header_components( $post ) {
         $components = [];
 
         $headerGenerator = GeneratorFactory::create( 'super-hero' );
         $components[] = $headerGenerator->get($post);
 
-
         if ($post->standfirst !== "") {
-          $standFirstGenerator = GeneratorFactory::create( 'standfirst' );
-          $components[] = $standFirstGenerator->get($post);
+            $standFirstGenerator = GeneratorFactory::create( 'standfirst' );
+            $components[] = $standFirstGenerator->get($post);
         }
 
         return $components;
     }
 
-    protected static function get_content_components( $post ) {
+    private function get_content_components( $post ) {
         $components = [];
         $theme_base_directory = get_stylesheet_directory();
         $widgets_directory = $theme_base_directory . '/views/widgets';
@@ -57,7 +51,7 @@ class Generator
         return $components;
     }
 
-    protected static function get_footer_components( TimberPost $post ) {
+    private function get_footer_components( $post ) {
         $components = [];
 
         $generator = GeneratorFactory::create( 'footer' );

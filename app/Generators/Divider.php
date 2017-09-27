@@ -2,11 +2,9 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-use Timber;
-
 class Divider implements GeneratorInterface
 {
-    public function get( $widget ) {
+    public function get( $widget = null ) {
         return "<hr/>";
     }
 }
