@@ -4,12 +4,6 @@
   "share_image":       TimberImage(post.share_image).src | default(TimberImage(post.hero_images[0]).src | default(options.default_share_image.url)),
 } %}
 
-{% if brand == 'sh' %}
-  {% set apikey = 'shortlist.com' %}
-{% else %}
-  {% set apikey = 'stylist.co.uk' %}
-{% endif %}
-
 <html lang="en" prefix="op: http://media.facebook.com/op#">
   <head>
     <meta charset="utf-8">
@@ -23,35 +17,25 @@
   </head>
   <body>
     <article>
-      <figure class="op-tracker">
-        <iframe>
-          <script>
-            PARSELY = {
-              autotrack: false,
-              onload: function() {
-                PARSELY.beacon.trackPageView({
-                  urlref: 'http://facebook.com/instantarticles'
-                });
-                return true;
-              }
-            }
-          </script>
-          <div id="parsely-root" style="display: none">
-            <span id="parsely-cfg" data-parsely-site="{{apikey}}"></span>
-          </div>
-          <script>
-            (function(s, p, d) {
-            var h=d.location.protocol, i=p+"-"+s,
-            e=d.getElementById(i), r=d.getElementById(p+"-root"),
-            u=h==="https:"?"d1z2jf7jlzjs58.cloudfront.net"
-            :"static."+p+".com";
-            if (e) return;
-            e = d.createElement(s); e.id = i; e.async = true;
-            e.src = h+"//"+u+"/p.js"; r.appendChild(e);
-            })("script", "parsely", document);
-          </script>
-        </iframe>
-      </figure>
+         <!-- Analytics code for your article -->
+        <figure class="op-tracker">
+            <iframe>
+                <script type="text/javascript">
+                    !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+                        // Load with segment write key
+                        analytics.load("{{SEGMENT_WRITE_KEY}}");
+                        // Load with custom page properties
+                        analytics.page({
+                            title: ia_document.title,
+                            url: ia_document.shareURL,
+                            referrer: ia_document.referrer,
+                            platform: 'FBInstantArticle'
+                        })
+                    }}();
+                </script>
+                <!-- END Parse.ly Include: Standard -->
+            </iframe>
+        </figure>
       <header>
         <figure>
           <img src="{{TimberImage(post.hero_images[0]).src('landscape')}}" />
