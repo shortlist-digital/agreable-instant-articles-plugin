@@ -32,6 +32,7 @@ class SuperHero implements GeneratorInterface
                 'post_category' => $post->post_category,
                 'post_category_slug' => $category[0]->slug,
                 'post_date' => gmdate('d M Y', strtotime($post->post_date)),
+                'SEGMENT_WRITE_KEY' => getenv( 'SEGMENT_WRITE_KEY' ),
                 'canonical_url' => $url
             ]
         );
