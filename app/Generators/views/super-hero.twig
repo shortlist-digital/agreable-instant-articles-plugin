@@ -25,11 +25,20 @@
                         // Load with segment write key
                         analytics.load("{{SEGMENT_WRITE_KEY}}");
                         // Load with custom page properties
-                        analytics.page({
+                        analytics.page(
+                        // Parsley 'Properties' object
+                        {
                             title: ia_document.title,
                             url: ia_document.shareURL,
                             referrer: ia_document.referrer,
-                            platform: 'FBInstantArticle'
+                            Platform: 'FBInstantArticle'
+                        },
+                        // Parsely 'Context' Object
+                        {
+                            campaign: {
+                                source: 'social',
+                                medium: 'm.facebook.com'
+                            }
                         })
                     }}();
                 </script>
