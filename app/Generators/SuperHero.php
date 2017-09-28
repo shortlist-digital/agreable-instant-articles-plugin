@@ -4,14 +4,12 @@ namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
 use TimberSite;
-use TimberPost;
-use TimberImage;
 
 class SuperHero implements GeneratorInterface
 {
     public function get( $post ) {
-        if ( strlen( $post->title ) < 250 ) {
-            $title = $post->title;
+        if ( strlen( $post->post_title ) < 250 ) {
+            $title = $post->post_title;
         } else {
             $title = $post->short_headline;
         }
@@ -24,7 +22,8 @@ class SuperHero implements GeneratorInterface
         }
 
         $category = $post->terms( 'category' );
-        $html_as_string = Timber::compile(
+
+        return Timber::compile(
             __DIR__ . '/views/super-hero.twig',
             [
                 'site' => new TimberSite(),
@@ -36,7 +35,5 @@ class SuperHero implements GeneratorInterface
                 'canonical_url' => $url
             ]
         );
-
-        return $html_as_string;
     }
 }
