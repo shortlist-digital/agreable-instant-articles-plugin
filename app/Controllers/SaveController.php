@@ -15,8 +15,9 @@ class SaveController {
     function __construct(TimberPost $post) {
         $take_live = !empty($post->instant_articles_is_preview);
 
-        $instant_article = Generator::create_object($post);
+        $instant_article = (new Generator)->create_object($post);
         $client = (new ClientProvider())->get_client_instance();
+
         try {
             $response = $client->importArticle($instant_article, $take_live);
 
