@@ -1,6 +1,10 @@
 
 #### 2.3.1 (27/09/2017)
 
+* Using `NOCACHE` parameter in twig compile method
+
+#### 2.3.1 (27/09/2017)
+
 * Adding support for segment analytics
 
 #### 2.3.0 (27/09/2017)
