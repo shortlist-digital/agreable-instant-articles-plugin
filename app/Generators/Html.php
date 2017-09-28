@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 use Sunra\PhpSimple\HtmlDomParser;
 
 class Html implements GeneratorInterface
@@ -22,7 +23,8 @@ class Html implements GeneratorInterface
 
         $html_as_string = Timber::compile(
             __DIR__ . '/views/html.twig',
-            [ 'embed' => $embed ]
+            [ 'embed' => $embed ],
+            false, TimberLoader::CACHE_NONE
         );
 
         return $html_as_string;

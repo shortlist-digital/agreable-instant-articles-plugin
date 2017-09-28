@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class Paragraph implements GeneratorInterface
 {
@@ -19,7 +20,8 @@ class Paragraph implements GeneratorInterface
 
         $html_as_string = Timber::compile(
             __DIR__ . '/views/' . $file . '.twig',
-            [ 'paragraph' => $html ]
+            [ 'paragraph' => $html ],
+            false, TimberLoader::CACHE_NONE
         );
 
         return $html_as_string;

@@ -10,8 +10,12 @@
  * License:           MIT
  */
 
-if(file_exists(__DIR__ . '/vendor/getherbert/framework/bootstrap/autoload.php')){
-  require_once __DIR__ . '/vendor/getherbert/framework/bootstrap/autoload.php';
+add_filter( 'timber/cache/mode', function () {
+    return 'none';
+} );
+
+if(file_exists(__DIR__ . '/vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php')){
+  require_once __DIR__ . '/vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php';
 } else {
-  require_once __DIR__ . '/../../../../vendor/getherbert/framework/bootstrap/autoload.php';
+  require_once __DIR__ . '/../../../../vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php';
 }

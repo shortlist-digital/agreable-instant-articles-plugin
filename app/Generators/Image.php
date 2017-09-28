@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class Image implements GeneratorInterface
 {
@@ -15,7 +16,8 @@ class Image implements GeneratorInterface
             [
                 'image' => $image,
                 'caption' => $caption
-            ]
+            ],
+            false, TimberLoader::CACHE_NONE
         );
 
         return $html_as_string;

@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 
 class Embed implements GeneratorInterface
 {

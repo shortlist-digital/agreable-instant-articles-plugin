@@ -3,6 +3,7 @@
 namespace AgreableInstantArticlesPlugin\Generators;
 
 use Timber;
+use TimberLoader;
 use TimberSite;
 
 class SuperHero implements GeneratorInterface
@@ -33,7 +34,9 @@ class SuperHero implements GeneratorInterface
                 'post_date' => gmdate('d M Y', strtotime($post->post_date)),
                 'SEGMENT_WRITE_KEY' => getenv( 'SEGMENT_WRITE_KEY' ),
                 'canonical_url' => $url
-            ]
+            ],
+            false,
+            TimberLoader::CACHE_NONE
         );
     }
 }

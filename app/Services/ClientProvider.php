@@ -6,7 +6,7 @@ class ClientProvider {
   function __construct() {
 
     // String is needed for the comparison
-    if (getenv('FB_INSTANT_ARTICLES_DEVELOPMENT_MODE') === "false") {
+    if (getenv('INSTANT_ARTICLES_DEBUG') === "false") {
       $development_mode = false;
     } else {
       $development_mode = true;
