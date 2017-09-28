@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "shortlist-digital/framework": "dev-master",
+        "shortlist-digital/framework": "@dev",
         "illuminate/contracts": "5.3.x",
         "nategood/httpful": "dev-master",
         "guzzlehttp/guzzle": "~6.0",
