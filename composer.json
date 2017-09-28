@@ -3,8 +3,14 @@
     "type": "wordpress-plugin",
     "description": "Wordpress plugin for Shortlist Media.",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/shortlist-digital/framework"
+        }
+    ],
     "require": {
-        "getherbert/framework": "~0.9",
+        "getherbert/framework": "dev-master",
         "illuminate/contracts": "5.3.x",
         "nategood/httpful": "dev-master",
         "guzzlehttp/guzzle": "~6.0",
