@@ -14,7 +14,7 @@ Feature: Test the Instant Articles generators
 
     Scenario: It will have an Gallery widget
         Then the response should contain "<h1>350x150</h1>"
-        And  the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/350x150-218.png\"/>"
+        And  the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/350x150"
 
     Scenario: It will have a heading widget
         Then the response should contain "<h1>Hello Instant Articles</h1>"
@@ -29,5 +29,5 @@ Feature: Test the Instant Articles generators
         Then the response should contain "<blockquote><i>&ldquo;Hello Quote&rdquo;</i></blockquote>"
 
     Scenario: It will have a image widget
-        Then the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/600x450-218.png\"/>"
+        Then the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/600x450"
         And the response should contain "<figcaption>Hello caption"
