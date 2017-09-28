@@ -5,8 +5,8 @@
     "license": "MIT",
     "repositories": [
         {
-            "type": "git",
-            "url": "https://github.com/shortlist-digital/framework"
+            "type": "vcs",
+            "url": "git@github.com:shortlist-digital/framework.git"
         }
     ],
     "require": {
