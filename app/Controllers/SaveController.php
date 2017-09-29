@@ -13,7 +13,7 @@ use Facebook\InstantArticles\Transformer\Transformer;
 class SaveController {
 
     function __construct(TimberPost $post) {
-        $take_live = empty($post->instant_articles_is_preview);
+        $take_live = empty($post->instant_articles_is_preview) && ($post->post_status === 'publish');
 
         $instant_article = (new Generator)->create_object($post);
         $client = (new ClientProvider())->get_client_instance();
