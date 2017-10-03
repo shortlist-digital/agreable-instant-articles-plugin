@@ -64,9 +64,18 @@ class Client
      */
     public static function create($appID, $appSecret, $accessToken, $pageID, $developmentMode = false)
     {
-        Type::enforce($appID, Type::STRING);
-        Type::enforce($appSecret, Type::STRING);
-        Type::enforce($accessToken, Type::STRING);
+        try {
+            Type::enforce($appID, Type::STRING);
+            Type::enforce($appSecret, Type::STRING);
+            Type::enforce($accessToken, Type::STRING);
+        } catch ( \Exception $e ) {
+?>
+            <div class="notice notice-error">
+                <p>[Facebook Instant Articles Plugin] Please complete the configuration otherwise you will not be able to save any post. <a href="http://shortlist.dev/wp/wp-admin/admin.php?page=instant-articles-index">You can complete the configuration by clicking here</a> or clicking in the "Instant Articles" menu option.</p>
+            </div>
+<?php
+            exit;
+        }
 
         $facebook = new Facebook([
             'app_id' => $appID,
