@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta property="op:markup_version" content="v1.0">
     <meta property="fb:article_style" content="default">
-    <meta property="fb:use_automatic_ad_placement" content="true">
+    <meta property="fb:use_automatic_ad_placement" content="enable=true ad_density=default">
     <meta property="og:title" content="{{ post.short_headline }}">
     <meta property="og:description" content="{{ post.sell }}">
     <meta property="og:image" content="{{ metadata.share_image }}">
@@ -66,10 +66,11 @@
         </time>
 
         <section class="op-ad-template">
-          <!-- Ads to be automatically placed throughout the article -->
-          {% for advert in adverts.body %}
-            {{ advert }}
-          {% endfor %}
+        {% for advert in adverts %}
+            <figure class="op-ad {{ loop.first ? 'op-ad-default' }}">
+                <iframe src="{{ advert.web_base_url }}/advert?zone={{ advert.zone }}&sizes=300,250&pos=midarticle&is_article=yes&type=article&post_id={{ post.ID }}&post_slug={{ post.slug }}&path={{ advert.path }}&platform=fb-instant" height="300" width="250"></iframe>
+            </figure>
+        {% endfor %}
         </section>
       </header>
 

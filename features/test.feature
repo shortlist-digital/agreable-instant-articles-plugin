@@ -14,7 +14,7 @@ Feature: Test the Instant Articles generators
 
     Scenario: It will have an Gallery widget
         Then the response should contain "<h1>350x150</h1>"
-        And  the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/350x150"
+        And  the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/10/350x150"
 
     Scenario: It will have a heading widget
         Then the response should contain "<h1>Hello Instant Articles</h1>"
@@ -29,5 +29,11 @@ Feature: Test the Instant Articles generators
         Then the response should contain "<blockquote><i>&ldquo;Hello Quote&rdquo;</i></blockquote>"
 
     Scenario: It will have a image widget
-        Then the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/09/600x450"
+        Then the response should contain "<img src=\"http://shortlist.dev/app/uploads/2017/10/600x450"
         And the response should contain "<figcaption>Hello caption"
+
+    Scenario: It will have ads
+        Then the response should contain "<section class=\"op-ad-template\">"
+        And  the response should contain "<figure class=\"op-ad op-ad-default\">"
+        And  the response should contain "advert?zone=uncategorized&sizes=300,250&pos=midarticle&is_article=yes&type=article&post_id=6&post_slug=hello-instant-articles&path=/uncategorized/hello-instant-articles/6&platform=fb-instant\" height=\"300\" width=\"250\"></iframe>"
+
