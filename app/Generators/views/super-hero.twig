@@ -68,7 +68,7 @@
         <section class="op-ad-template">
         {% for advert in adverts %}
             <figure class="op-ad {{ loop.first ? 'op-ad-default' }}">
-                <iframe src="{{ advert.web_base_url }}/advert?zone={{ advert.zone }}&size=300,250&pos=midarticle&is_article=yes&type=article&post_id={{ post.ID }}&post_slug={{ post.slug }}&path={{ advert.path }}&platform=fb-instant" height="250" width="300"></iframe>
+                <iframe src="{{ advert.web_base_url }}/advert?zone={{ advert.zone }}&size=300,250&pos=midarticle&is_article=yes&type=article&post_id={{ post.ID }}&post_slug={{ post.slug }}&path={{ advert.path }}&platform=facebook-instant-articles" height="250" width="300"></iframe>
             </figure>
         {% endfor %}
         </section>
