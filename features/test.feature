@@ -35,5 +35,5 @@ Feature: Test the Instant Articles generators
     Scenario: It will have ads
         Then the response should contain "<section class=\"op-ad-template\">"
         And  the response should contain "<figure class=\"op-ad op-ad-default\">"
-        And  the response should contain "advert?zone=uncategorized&sizes=300,250&pos=midarticle&is_article=yes&type=article&post_id=6&post_slug=hello-instant-articles&path=/uncategorized/hello-instant-articles/6&platform=fb-instant\" height=\"300\" width=\"250\"></iframe>"
+        And  the response should contain "advert?zone=uncategorized&size=300,250&pos=midarticle&is_article=yes&type=article&post_id=6&post_slug=hello-instant-articles&path=/uncategorized/hello-instant-articles/6&platform=fb-instant\" height=\"250\" width=\"300\"></iframe>"
 
