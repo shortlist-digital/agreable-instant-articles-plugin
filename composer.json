@@ -6,7 +6,6 @@
     "require": {
         "shortlist-digital/agreable-wp-plugin-framework": "1.0.0",
         "illuminate/contracts": "5.3.x",
-        "nategood/httpful": "dev-master",
         "guzzlehttp/guzzle": "~6.0",
         "jimmiw/php-time-ago": "^0.4.10",
         "facebook/facebook-instant-articles-sdk-php": "1.*",
