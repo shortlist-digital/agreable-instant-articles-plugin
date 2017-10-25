@@ -20,6 +20,7 @@ class PanelController {
         foreach($this->fields as &$field) {
             $field['value'] = get_option($field['name']);
         }
+
         return view('@AgreableInstantArticlesPlugin/admin/index.twig', [
             'fields' => $this->fields,
             'pages' => $this->pages(),
@@ -47,6 +48,7 @@ class PanelController {
 
             // Grab pages you are admin of and tokens
             $pages_data = $helper->getPagesAndTokens($userAccessToken)->all();
+
             //print_r($pages_data);die;
             return $pages_data;
         } else {
@@ -59,6 +61,7 @@ class PanelController {
         if (get_option('instant_articles_app_id')) {
             $do_next_fields = true;
         }
+
         foreach($this->fields as $field) {
             update_option($field['name'], $http->get($field['name']));
         }
@@ -70,6 +73,7 @@ class PanelController {
     }
 
     public function decode_facebook_page_data($data_string) {
+
         $page_data = json_decode($data_string, true);
         if ( empty( $page_data ) ) {
             return;

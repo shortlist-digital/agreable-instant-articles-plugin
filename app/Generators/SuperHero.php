@@ -13,9 +13,10 @@ class SuperHero implements GeneratorInterface
 
         $url = get_permalink( $post->id );
         $parsed_url = parse_url( $url );
+        $domain = getenv('WEB_BASE_DOMAIN') ?: 'www.shortlist.com';
 
-        if ( $parsed_url['host'] !== 'www.shortlist.com' ) {
-            $url = $parsed_url['scheme'] . '://www.shortlist.com' . $parsed_url['path'];
+        if ( $parsed_url['host'] !== $domain ) {
+            $url = $parsed_url['scheme'] . '://' . $domain . $parsed_url['path'];
         }
 
         $category = $post->terms( 'category' );

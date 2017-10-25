@@ -1,21 +1,21 @@
-# This is the root editor config file
+# editorconfig.org
 root = true
 
-# Use unix line endings
 [*]
+indent_style = space
 end_of_line = lf
-insert_final_newline = true
-
-# 2 space indentation for everything
-index_style = space
-indent_size = 4
-
-# Charset
+indent_size = 2
 charset = utf-8
-
-# Trim whitespace if the editor supports it
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+[*.{html,twig,md}]
+indent_size = 2
+
+[*.php]
+charset = utf-8
+indent_style = tab
+indent_size = 4
 
 [*.md]
 trim_trailing_whitespace = false
