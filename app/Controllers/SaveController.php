@@ -11,31 +11,24 @@ use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Transformer\Transformer;
 
 class SaveController {
+	function __construct(TimberPost $post) {
+		// not published, no Facebook IA for you
+		if ( $post->post_status !== 'publish' ) {
+			return;
+		}
 
-    function __construct(TimberPost $post) {
-        $take_live = 'production' === getenv( 'WP_ENV' ) && empty( $post->instant_articles_is_preview ) && $post->post_status === 'publish';
+		$instant_article = (new Generator)->create_object($post);
 
-        $instant_article = (new Generator)->create_object($post);
-        $client = (new ClientProvider())->get_client_instance();
+		try {
+			$client = (new ClientProvider())->get_client_instance();
 
-        try {
-            $response = $client->importArticle($instant_article, $take_live);
+			$response = $client->importArticle( $instant_article );
 
-            if ($id = $response->id) {
-                update_field('instant_articles_status_id', $id, $post);
-            }
-        } catch (Exception $e) {
-            echo 'Could not import the article: '.$e->getMessage();
-        }
-    }
-
-    public function build_article_object($url) {
-        try {
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            die;
-        }
-
-        return $html;
-    }
+			if ($id = $response->id) {
+				update_field('instant_articles_status_id', $id, $post);
+			}
+		} catch (Exception $e) {
+			echo 'Could not import the article: '.$e->getMessage();
+		}
+	}
 }

@@ -8,9 +8,9 @@ class ClientProvider
         $this->client = Client::create(
             get_option('instant_articles_app_id'),
             get_option('instant_articles_app_secret'),
-            get_option('instant_articles_page_token'),
+            get_option('instant_articles_app_user_access_token'),
             get_option('instant_articles_page_id'),
-            getenv('INSTANT_ARTICLES_DEBUG') === "false"
+            getenv('WP_ENV') !== "production" //dev mode
         );
     }
 

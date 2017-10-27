@@ -1,7 +1,16 @@
 Agreable Instant Articles Plugin
 ===============
 
-Instant Articles Plugin for Croissant powered sites
+## Instant Articles Plugin for Croissant powered sites
+
+### Environment variables
+
+There are 3 environment variables needed to be set for this plugin work correctly
+ - `WEB_BASE_DOMAIN`: `www.stylist.co.uk` or `www.shortlist.com`
+ - `WEB_BASE_URL`: Used by the Telemetry Aquisition generator
+ - `SEGMENT_WRITE_KEY`: used for analytics purpose
+
+### Generators
 
 Contains generators for the following widgets
 
