@@ -5,9 +5,8 @@ Agreable Instant Articles Plugin
 
 ### Environment variables
 
-There are 3 environment variables needed to be set for this plugin work correctly
- - `WEB_BASE_DOMAIN`: `www.stylist.co.uk` or `www.shortlist.com`
- - `WEB_BASE_URL`: Used by the Telemetry Aquisition generator
+There are 2 environment variables needed to be set for this plugin work correctly
+ - `FACEBOOK_IA_DOMAIN`: `www.stylist.co.uk` or `www.shortlist.com` (and new websites in the future)
  - `SEGMENT_WRITE_KEY`: used for analytics purpose
 
 ### Generators

@@ -13,7 +13,8 @@ class SuperHero implements GeneratorInterface
 
         $url = get_permalink( $post->id );
         $parsed_url = parse_url( $url );
-        $domain = getenv('WEB_BASE_DOMAIN') ?: 'www.shortlist.com';
+
+        $domain = getenv('FACEBOOK_IA_DOMAIN');
 
         if ( $parsed_url['host'] !== $domain ) {
             $url = $parsed_url['scheme'] . '://' . $domain . $parsed_url['path'];

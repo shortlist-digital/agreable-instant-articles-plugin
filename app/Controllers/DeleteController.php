@@ -16,7 +16,7 @@ class DeleteController
 
         $final_url = get_permalink($post->ID);
         $url = parse_url($final_url);
-        $domain = getenv('WEB_BASE_DOMAIN') ?: 'www.shortlist.com';
+        $domain = getenv('FACEBOOK_IA_DOMAIN');
 
         if ($url['host'] !== $domain) {
             $final_url = $url['scheme'] . '://' . $domain . $url['path'];
