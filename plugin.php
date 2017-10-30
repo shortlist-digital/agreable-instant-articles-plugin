@@ -36,8 +36,16 @@ add_action( 'admin_notices', function() {
     if ( empty( getenv( 'SEGMENT_WRITE_KEY' ) ) ) {
 ?>
     <div class="notice notice-error">
-        <p>[Facebook Instant Articles Plugin] The enviroment variable SEGMENT_WRITE_KEY is not setup correctly. This will affect the Facebook IA analytics. Please contact someone from the development team and ask to fix it.</p>
+        <p>[Facebook Instant Articles Plugin] The enviroment variable SEGMENT_WRITE_KEY is not setup correctly. This will affect the Facebook IA analytics. Please contact someone from the development team.</p>
     </div>
 <?php
     }
+
+	if ( empty( getenv('FACEBOOK_IA_DOMAIN') ) ) {
+?>
+    <div class="notice notice-error">
+        <p>[Facebook Instant Articles Plugin] The enviroment variable FACEBOOK_IA_DOMAIN is not setup correctly. This will affect the Facebook IA plugin. Please contact someone from the development team.</p>
+    </div>
+<?php
+	}
 });
