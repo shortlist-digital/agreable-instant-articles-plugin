@@ -2,11 +2,9 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-use Timber;
-use TimberLoader;
 use Sunra\PhpSimple\HtmlDomParser;
 
-class Html implements GeneratorInterface
+class Html extends TwigRenderer implements GeneratorInterface
 {
     public function get($widget) {
         $embed = "<div>".$widget['html']."</div>";
@@ -21,12 +19,9 @@ class Html implements GeneratorInterface
             }
         }
 
-        $html_as_string = Timber::compile(
-            __DIR__ . '/views/html.twig',
-            [ 'embed' => $embed ],
-            false, TimberLoader::CACHE_NONE
+        return $this->renderer->render(
+            'html.twig',
+            [ 'embed' => $embed ]
         );
-
-        return $html_as_string;
     }
 }

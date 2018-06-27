@@ -2,8 +2,6 @@
 
 namespace AgreableInstantArticlesPlugin\Controllers;
 
-use TimberPost;
-
 use AgreableInstantArticlesPlugin\Services\Client;
 use AgreableInstantArticlesPlugin\Services\ClientProvider;
 use AgreableInstantArticlesPlugin\Services\Generator;
@@ -11,20 +9,27 @@ use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Transformer\Transformer;
 
 class SaveController {
-	function __construct(TimberPost $post) {
-		// not published, no Facebook IA for you
+
+	private $generator;
+	private $client_provider;
+
+	public function __construct( Generator $generator, ClientProvider $client_provider ) {
+		$this->generator = $generator;
+		$this->client_provider = $client_provider;
+	}
+
+	public function save( \WP_Post $post ) {
 		if ( $post->post_status !== 'publish' ) {
 			return;
 		}
 
-		$instant_article = (new Generator)->create_object($post);
+		$instant_article = $this->generator->create_object( $post );
 
 		try {
-			$client = (new ClientProvider())->get_client_instance();
-
+			$client = $this->client_provider->get_client_instance();
 			$response = $client->importArticle( $instant_article );
 
-			if ($id = $response->id) {
+			if ( $id = $response->id ) {
 				update_field('instant_articles_status_id', $id, $post);
 			}
 		} catch (Exception $e) {

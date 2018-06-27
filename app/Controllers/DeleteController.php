@@ -4,24 +4,27 @@ namespace AgreableInstantArticlesPlugin\Controllers;
 
 use Timberpost;
 
-use AgreableInstantArticlesPlugin\Services\Client;
 use AgreableInstantArticlesPlugin\Services\ClientProvider;
 
-class DeleteController
-{
-    function __construct(Timberpost $post) {
-        $this->post = $post;
+class DeleteController {
 
-        $client = (new ClientProvider())->get_client_instance();
+	private $client_provider;
+	private $facebook_ia_domain;
 
-        $final_url = get_permalink($post->ID);
-        $url = parse_url($final_url);
-        $domain = getenv('FACEBOOK_IA_DOMAIN');
+	public function __construct( ClientProvider $client_provider, $facebook_ia_domain ) {
+		$this->client_provider = $client_provider;
+		$this->facebook_ia_domain = $facebook_ia_domain;
+	}
 
-        if ($url['host'] !== $domain) {
-            $final_url = $url['scheme'] . '://' . $domain . $url['path'];
+    function delete( \WP_Post $post ) {
+        $client = $this->client_provider->get_client_instance();
+        $final_url = get_permalink( $post->ID );
+        $url = parse_url( $final_url );
+
+        if ( $url['host'] !== $this->facebook_ia_domain ) {
+            $final_url = $url['scheme'] . '://' . $this->facebook_ia_domain . $url['path'];
         }
 
-        $client->removeArticle($final_url);
+        $client->removeArticle( $final_url );
     }
 }

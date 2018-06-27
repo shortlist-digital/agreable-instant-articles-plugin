@@ -2,23 +2,15 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-use Timber;
-use TimberLoader;
-use TimberSite;
-use TimberPost;
-use TimberImage;
-
-class Standfirst implements GeneratorInterface
+class Standfirst extends TwigRenderer implements GeneratorInterface
 {
-    public function get( $post ) {
-      $standFirst = $post->standfirst;
-      $html_as_string = Timber::compile(
-        __DIR__ . '/views/standfirst.twig',
-            [ 'standfirst' => $standFirst ],
-            false, TimberLoader::CACHE_NONE
-        );
+	public function get( $post ) {
+		$standFirst = get_field( 'standfirst', $post->ID ) ?: '';
 
-      return $html_as_string;
-    }
+		return $this->renderer->render(
+			'standfirst.twig',
+			[ 'standfirst' => $standFirst ]
+		);
+	}
 
 }

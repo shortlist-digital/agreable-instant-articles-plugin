@@ -2,7 +2,7 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-class Embed implements GeneratorInterface
+class Embed extends TwigRenderer implements GeneratorInterface
 {
     public function get( $widget ) {
         if ( ! isset( $widget['caption'] ) ) {
@@ -10,6 +10,6 @@ class Embed implements GeneratorInterface
         }
         $widget['caption'] = strip_tags( $widget['caption'] );
 
-        return \Timber::compile( __DIR__ . '/views/embed.twig', $widget );
+        return $this->renderer->render( 'embed.twig', $widget );
     }
 }
