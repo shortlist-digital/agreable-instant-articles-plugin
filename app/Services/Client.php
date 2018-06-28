@@ -157,12 +157,12 @@ class Client
 		if (!$instantArticle) {
 			$instantArticle = $response->getGraphNode()->getField('development_instant_article');
 		}
+
 		if (!$instantArticle) {
 			return null;
 		}
 
-		$articleID = $instantArticle->getField('id');
-		return $articleID;
+		return $instantArticle->getField('id');
 	}
 
 	public function getSubmissionStatus($submissionID) {

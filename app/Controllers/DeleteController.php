@@ -2,8 +2,6 @@
 
 namespace AgreableInstantArticlesPlugin\Controllers;
 
-use Timberpost;
-
 use AgreableInstantArticlesPlugin\Services\ClientProvider;
 
 class DeleteController {
