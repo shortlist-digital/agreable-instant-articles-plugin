@@ -5,6 +5,11 @@ namespace AgreableInstantArticlesPlugin\Services;
 class ClientProvider
 {
 	private $client;
+	private $env_params;
+
+	public function __construct( array $env_params ) {
+		$this->env_params = $env_params;
+	}
 
     public function get_client_instance() {
 		if ( $this->client !== null ) {
@@ -12,11 +17,11 @@ class ClientProvider
 		}
 
         $this->client = Client::create(
-            get_option('instant_articles_app_id'),
-            get_option('instant_articles_app_secret'),
-            get_option('instant_articles_app_user_access_token'),
-            get_option('instant_articles_page_id'),
-            getenv('WP_ENV') !== "production" //dev mode
+			$this->env_params['app_id'],
+			$this->env_params['app_secret'],
+			$this->env_params['access_token'],
+			$this->env_params['page_id'],
+			$this->env_params['dev_mode']
         );
 
 		return $this->client;
