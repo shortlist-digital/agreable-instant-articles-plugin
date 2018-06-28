@@ -1,10 +1,10 @@
 <figure class="op-interactive">
   <iframe class="no-margin">
-    {{ embed }}
+    {{ embed|raw }}
   </iframe>
   {% if caption %}
     <figcaption>
-      {{caption}}
+      {{ caption }}
     </figcaption>
   {% endif %}
 </figure>

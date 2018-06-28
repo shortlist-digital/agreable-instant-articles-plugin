@@ -105,6 +105,7 @@ class Client
 				'published' => ! $this->developmentMode,
 				'development_mode' => $this->developmentMode,
 			]);
+
 			return json_decode($response->getBody());
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			echo 'Graph returned an error: ' . $e->getMessage();
@@ -156,12 +157,12 @@ class Client
 		if (!$instantArticle) {
 			$instantArticle = $response->getGraphNode()->getField('development_instant_article');
 		}
+
 		if (!$instantArticle) {
 			return null;
 		}
 
-		$articleID = $instantArticle->getField('id');
-		return $articleID;
+		return $instantArticle->getField('id');
 	}
 
 	public function getSubmissionStatus($submissionID) {

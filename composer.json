@@ -4,19 +4,18 @@
     "description": "Wordpress plugin for Shortlist Media.",
     "license": "MIT",
     "require": {
-        "shortlist-digital/agreable-wp-plugin-framework": "2.0.0",
-        "illuminate/contracts": "5.3.x",
-        "guzzlehttp/guzzle": "~6.0",
-        "jimmiw/php-time-ago": "^0.4.10",
-        "facebook/facebook-instant-articles-sdk-php": "1.*",
-        "sunra/php-simple-html-dom-parser": "1.5.2"
+      "composer/installers": "@stable",
+      "pimple/pimple": "3.2.3",
+      "jimmiw/php-time-ago": "^0.4.10",
+      "facebook/facebook-instant-articles-sdk-php": "1.*",
+      "sunra/php-simple-html-dom-parser": "1.5.2"
     },
     "config": {
-        "preferred-install": "dist"
+      "preferred-install": "dist"
     },
     "autoload": {
-        "psr-4": {
-            "AgreableInstantArticlesPlugin\\": "app/"
-        }
+      "psr-4": {
+        "AgreableInstantArticlesPlugin\\": "app/"
+      }
     }
 }
