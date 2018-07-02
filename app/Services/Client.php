@@ -106,9 +106,6 @@ class Client
 				'development_mode' => $this->developmentMode,
 			]);
 
-			var_dump($response);
-			exit;
-
 			return json_decode($response->getBody());
 		} catch(Facebook\Exceptions\FacebookResponseException $e) {
 			echo 'Graph returned an error: ' . $e->getMessage();
