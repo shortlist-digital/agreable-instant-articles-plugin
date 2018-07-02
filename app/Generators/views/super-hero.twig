@@ -48,7 +48,7 @@
         </h3>
         <h1>{{ short_headline }}</h1>
         <address>
-          {{post.author.display_name}}
+          {{ author }}
         </address>
         <time class="op-published" dateTime="{{ post_date|date("d-M-Y") }}">
           {{ post_date }}
