@@ -28,8 +28,8 @@ class SuperHero extends TwigRenderer implements GeneratorInterface {
                 'site' => new \TimberSite(),
                 'post' => $post,
 				'post_title' => $title,
-				'short_headline' => get_post_meta( $post_id, 'short_headline', true ),
-				'sell' => get_post_meta( $post_id, 'sell', true ),
+				'short_headline' => get_post_meta( $post->ID, 'short_headline', true ),
+				'sell' => get_post_meta( $post->ID, 'sell', true ),
 				'share_image' => $share_image['url'],
 				'landscape_image' => $share_image['sizes']['landscape'],
                 'post_category' => get_term( wp_get_post_categories( $post->ID )[0] )->name,
@@ -38,7 +38,7 @@ class SuperHero extends TwigRenderer implements GeneratorInterface {
                 'post_date' => gmdate('d M Y', strtotime($post->post_date)),
                 'segment_write_key' => getenv( 'SEGMENT_WRITE_KEY' ),
                 'canonical_url' => $url,
-                'adverts' => $this->get_adverts( $post_id )
+                'adverts' => $this->get_adverts( $post->ID )
             ]
         );
     }
