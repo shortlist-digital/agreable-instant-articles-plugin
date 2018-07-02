@@ -106,8 +106,6 @@ class Client
 				'development_mode' => $this->developmentMode,
 			]);
 
-			echo $article;
-			exit;
 			var_dump($response);
 			exit;
 
