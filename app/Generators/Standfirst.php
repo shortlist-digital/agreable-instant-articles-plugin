@@ -12,5 +12,4 @@ class Standfirst extends TwigRenderer implements GeneratorInterface
 			[ 'standfirst' => $standFirst ]
 		);
 	}
-
 }
