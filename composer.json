@@ -6,7 +6,6 @@
     "require": {
       "composer/installers": "@stable",
       "pimple/pimple": "3.2.3",
-      "jimmiw/php-time-ago": "^0.4.10",
       "facebook/facebook-instant-articles-sdk-php": "1.*",
       "sunra/php-simple-html-dom-parser": "1.5.2"
     },
