@@ -35,7 +35,10 @@ class Generator
 
         foreach ( get_field( 'widgets', $post->ID ) as $widget ) {
             $widget_name = $widget['acf_fc_layout'];
-
+            if ($this->compatible_widget($widget_name) !== true) {
+                continue;
+            }
+            
             $generator = GeneratorFactory::create( $widget_name );
             $widget_components = $generator->get($widget, $post);
 
@@ -58,5 +61,31 @@ class Generator
         $components[] = $generator->get( $post );
 
         return $components;
+    }
+
+    // Currently ignored
+    // 'image-carousel',
+    // 'product-carousel',
+    // 'content-group',
+    // 'quick-links'
+    // related-articles
+    // polls
+    private function compatible_widget($widget) {
+        $compatible_widgets = [
+            'button',
+            'divider',
+            'embed',
+            'gallery',
+            'heading',
+            'html',
+            'image',
+            'listicle',
+            'newsletter_signup',
+            'paragraph',
+            'pull-quote',
+            'telemetry_acquisition'
+        ];
+
+        return in_array( $widget, $compatible_widgets, true );
     }
 }
