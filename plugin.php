@@ -10,21 +10,23 @@
  * License:           MIT
  */
 
-add_filter( 'timber/cache/mode', function () {
-    return 'none';
+if( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
+
+add_action( 'plugins_loaded', function() {
+	$container = require __DIR__ . '/container.php';
+
+	$container['custom_fields']->register_fields();
+	$container['hooks']->register_hooks();
 } );
 
-if(file_exists(__DIR__ . '/vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php')){
-  require_once __DIR__ . '/vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php';
-} else {
-  require_once __DIR__ . '/../../../../vendor/shortlist-digital/agreable-wp-plugin-framework/bootstrap/autoload.php';
-}
 
 add_action( 'admin_notices', function() {
     if (
-        empty( get_option( 'instant_articles_app_id' ) ) ||
-        empty( get_option( 'instant_articles_app_secret' ) ) ||
-        empty( get_option( 'instant_articles_app_user_access_token' ) )
+        empty( getenv( 'INSTANT_ARTICLES_APP_ID' ) ) ||
+        empty( getenv( 'INSTANT_ARTICLES_APP_SECRET' ) ) ||
+        empty( getenv( 'INSTANT_ARTICLES_APP_USER_ACCESS_TOKEN' ) )
     ) {
 ?>
     <div class="notice notice-error">

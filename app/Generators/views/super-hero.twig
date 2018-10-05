@@ -1,19 +1,13 @@
-{% set metadata = {
-  "share_title":       not post.share_title ? post.share_title : post.short_headline | default(wp_title | default(site.name)),
-  "share_description": not post.share_description ? post.share_description : post.sell | default(site.description),
-  "share_image":       TimberImage(post.share_image).src | default(TimberImage(post.hero_images[0]).src | default(options.default_share_image.url)),
-} %}
-
 <html lang="en" prefix="op: http://media.facebook.com/op#">
   <head>
     <meta charset="utf-8">
     <meta property="op:markup_version" content="v1.0">
     <meta property="fb:article_style" content="default">
     <meta property="fb:use_automatic_ad_placement" content="enable=true ad_density=default">
-    <meta property="og:title" content="{{ post.short_headline }}">
-    <meta property="og:description" content="{{ post.sell }}">
-    <meta property="og:image" content="{{ metadata.share_image }}">
-    <link rel="canonical" href="{{canonical_url}}">
+    <meta property="og:title" content="{{ short_headline }}">
+    <meta property="og:description" content="{{ sell }}">
+    <meta property="og:image" content="{{ share_image }}">
+    <link rel="canonical" href="{{ canonical_url }}">
   </head>
   <body>
     <article>
@@ -47,19 +41,14 @@
         </figure>
       <header>
         <figure>
-          <img src="{{TimberImage(post.hero_images[0]).src('landscape')}}" />
+          <img src="{{ landscape_image }}" />
         </figure>
         <h3 class="op-kicker">
-          {{post_category}}
+          {{ post_category }}
         </h3>
-        {% if post.title | length < 250 %}
-          {% set display_title = post.title %}
-        {% else %}
-          {% set display_title = post.short_headline %}
-        {% endif %}
-        <h1>{{ post.short_headline }}</h1>
+        <h1>{{ short_headline }}</h1>
         <address>
-          {{post.author.display_name}}
+          {{ author }}
         </address>
         <time class="op-published" dateTime="{{ post_date|date("d-M-Y") }}">
           {{ post_date }}

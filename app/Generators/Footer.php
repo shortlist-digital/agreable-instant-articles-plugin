@@ -2,16 +2,14 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-class Footer implements GeneratorInterface
+class Footer extends TwigRenderer implements GeneratorInterface
 {
     public function get( $post = null ) {
-        $html_as_string = \Timber::compile(
-            __DIR__ . '/views/footer.twig',
+        return $this->renderer->render(
+            'footer.twig',
             [
                 'name' => get_bloginfo('name')
             ]
         );
-
-        return $html_as_string;
     }
 }

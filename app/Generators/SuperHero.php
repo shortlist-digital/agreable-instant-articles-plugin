@@ -2,54 +2,57 @@
 
 namespace AgreableInstantArticlesPlugin\Generators;
 
-class SuperHero implements GeneratorInterface
-{
-    public function get( $post ) {
-        if ( strlen( $post->post_title ) < 250 ) {
-            $title = $post->post_title;
-        } else {
-            $title = $post->short_headline;
-        }
+class SuperHero extends TwigRenderer implements GeneratorInterface {
 
-        $url = get_permalink( $post->id );
+    public function get( $post ) {
+        $title = strlen( $post->post_title ) < 250 ? $post->post_title : $post->short_headline;
+
+        $url = get_permalink( $post->ID );
         $parsed_url = parse_url( $url );
 
+		$category = $this->get_category( $post_id );
         $domain = getenv('FACEBOOK_IA_DOMAIN');
 
         if ( $parsed_url['host'] !== $domain ) {
             $url = $parsed_url['scheme'] . '://' . $domain . $parsed_url['path'];
         }
 
-        $category = $post->terms( 'category' );
+		$share_image = get_field( 'share_image', $post->ID );
+		if ( $share_image === false ) {
+			$share_image = get_field( 'hero_images', $post->ID )[0];
+		}
 
-        return \Timber::compile(
-            __DIR__ . '/views/super-hero.twig',
+        return $this->renderer->render(
+            'super-hero.twig',
             [
                 'site' => new \TimberSite(),
                 'post' => $post,
-                'post_category' => $post->post_category,
-                'post_category_slug' => $category[0]->slug,
+				'post_title' => $title,
+				'short_headline' => get_post_meta( $post->ID, 'short_headline', true ),
+				'sell' => get_post_meta( $post->ID, 'sell', true ),
+				'share_image' => $share_image['url'],
+				'landscape_image' => $share_image['sizes']['landscape'],
+                'post_category' => get_term( wp_get_post_categories( $post->ID )[0] )->name,
+                'post_category_slug' => $category->slug,
+				'author' => get_user_by( 'id', $post->post_author )->data->display_name,
                 'post_date' => gmdate('d M Y', strtotime($post->post_date)),
                 'segment_write_key' => getenv( 'SEGMENT_WRITE_KEY' ),
                 'canonical_url' => $url,
-                'adverts' => $this->get_adverts( $post )
-            ],
-            false,
-            \TimberLoader::CACHE_NONE
+                'adverts' => $this->get_adverts( $post->ID )
+            ]
         );
     }
 
-    private function get_adverts( $post ) {
+    private function get_adverts( $post_id ) {
         $web_base_url = getenv('WEB_BASE_URL');
 
-        $category = get_the_category($post->ID);
+        $category = $this->get_category( $post_id );
         $zone = get_home_url();
-
-        if ( isset( $category[0] ) && $category[0] instanceof \WP_Term ) {
-            $zone = $category[0]->slug;
+        if ( $category instanceof \WP_Term ) {
+            $zone = $category->slug;
         }
 
-        $path = str_replace( $web_base_url, '', get_permalink( $post->ID ) );
+        $path = str_replace( $web_base_url, '', get_permalink( $post_id ) );
 
         return [
             [
@@ -59,4 +62,8 @@ class SuperHero implements GeneratorInterface
             ]
         ];
     }
+
+	private function get_category( $post_id ) {
+        return get_term( wp_get_post_categories( $post_id )[0] );
+	}
 }
